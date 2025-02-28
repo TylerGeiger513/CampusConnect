@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+// src/contexts/AuthContext.jsx
+import React, { createContext, useState, useEffect, useMemo, useCallback } from "react";
 import {
   login as loginService,
   signup as signupService,
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const useMock = process.env.REACT_APP_MOCK === "true";
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     try {
       if (useMock) {
         setUser(testUser);
@@ -28,35 +29,41 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [useMock]);
 
-  const loginUser = async (username, password) => {
-    try {
-      if (useMock) {
-        setUser(testUser);
-      } else {
-        await loginService(username, password);
-        await fetchUserProfile();
+  const loginUser = useCallback(
+    async (identifier, password) => {
+      try {
+        if (useMock) {
+          setUser(testUser);
+        } else {
+          await loginService(identifier, password);
+          await fetchUserProfile();
+        }
+      } catch (error) {
+        throw error;
       }
-    } catch (error) {
-      throw error;
-    }
-  };
+    },
+    [useMock, fetchUserProfile]
+  );
 
-  const signupUser = async (username, email, password) => {
-    try {
-      if (useMock) {
-        setUser(testUser);
-      } else {
-        await signupService(username, email, password);
-        await fetchUserProfile();
+  const signupUser = useCallback(
+    async (username, email, password) => {
+      try {
+        if (useMock) {
+          setUser(testUser);
+        } else {
+          await signupService(username, email, password);
+          await fetchUserProfile();
+        }
+      } catch (error) {
+        throw error;
       }
-    } catch (error) {
-      throw error;
-    }
-  };
+    },
+    [useMock, fetchUserProfile]
+  );
 
-  const logoutUser = async () => {
+  const logoutUser = useCallback(async () => {
     try {
       if (useMock) {
         setUser(null);
@@ -67,14 +74,23 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };
+  }, [useMock]);
 
   useEffect(() => {
     fetchUserProfile();
-  }, []);
+  }, [fetchUserProfile]);
+
+  // Memoize the context value to avoid unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    user,
+    loginUser,
+    signupUser,
+    logoutUser,
+    loading,
+  }), [user, loginUser, signupUser, logoutUser, loading]);
 
   return (
-    <AuthContext.Provider value={{ user, loginUser, signupUser, logoutUser, loading }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,17 +1,20 @@
-# /backend/Dockerfile.backend
-FROM node:18-alpine
+# Use an official Node runtime as a parent image
+FROM node:18-alpine AS base
 
-# Use /app as the working directory
+# Set working directory
 WORKDIR /app
 
+# Install dependencies first for caching purposes
 COPY package*.json ./
-RUN npm install
+RUN npm install 
 
+# Copy the rest of the code
 COPY . .
 
-# Expose the backend port.
+# Expose the backend port
 EXPOSE 5000
 
 
-CMD ["npm", "start"]
 
+# Run the application
+CMD ["npm", "start"]

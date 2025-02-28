@@ -1,27 +1,32 @@
-import React, { useState } from "react";
+// src/components/auth/Login.jsx
+import React, { useState, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Header from "../layout/Header";
 import ParticleBackground from "../layout/ParticleBackground";
-import styles from "../../styles/Login.module.css"
+import styles from "../../styles/Login.module.css";
 
 const Login = () => {
   const { loginUser } = useAuth();
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await loginUser(email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
-    }
-  };
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setError("");
+      try {
+        // If your login accepts username OR email, consider renaming variable to "identifier"
+        await loginUser(identifier, password);
+        navigate("/dashboard");
+      } catch (err) {
+        setError(err.message || "Login failed. Please try again.");
+      }
+    },
+    [identifier, password, loginUser, navigate]
+  );
 
   return (
     <>
@@ -30,14 +35,18 @@ const Login = () => {
       <div className={styles.loginContainer}>
         <div className={styles.loginBox}>
           <h2 className={styles.loginTitle}>Login</h2>
-          {error && <p className={`${styles.loginError} ${styles.show}`}>{error}</p>}
+          {error && (
+            <p className={`${styles.loginError} ${styles.show}`}>
+              {error}
+            </p>
+          )}
           <form onSubmit={handleSubmit}>
             <input
               className={styles.loginInput}
               type="text"
               placeholder="Username or Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               required
             />
             <input
@@ -48,11 +57,16 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button className={styles.loginButton} type="submit">Login</button>
+            <button className={styles.loginButton} type="submit">
+              Login
+            </button>
           </form>
           <p className={styles.signupRedirect}>
             Don't have an account?
-            <button className={styles.signupRedirectButton} onClick={() => navigate("/signup")}>
+            <button
+              className={styles.signupRedirectButton}
+              onClick={() => navigate("/signup")}
+            >
               Sign Up
             </button>
           </p>
@@ -62,4 +76,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default React.memo(Login);
