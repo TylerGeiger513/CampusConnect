@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Req, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
 import { Request } from 'express';
 import { FriendsService } from './friends.service';
 import { SendFriendRequestDto } from './dto/send-friend-request.dto';
@@ -66,6 +66,7 @@ export class FriendsController {
    * @param handleFriendRequestDto - DTO containing the friend request ID.
    */
   @Post('revoke')
+  @HttpCode(HttpStatus.OK)
   async revokeFriendRequest(
     @Req() req: Request,
     @Body() handleFriendRequestDto: HandleFriendRequestDto,

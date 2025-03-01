@@ -1,5 +1,7 @@
 Files being processed:
 C:\Users\Tyler\workspace\CampusConnect1\.dockerignore
+C:\Users\Tyler\workspace\CampusConnect1\.gitignore
+C:\Users\Tyler\workspace\CampusConnect1\bootstrap.sh
 C:\Users\Tyler\workspace\CampusConnect1\log.py
 C:\Users\Tyler\workspace\CampusConnect1\profile.py
 C:\Users\Tyler\workspace\CampusConnect1\setup.py
@@ -21,16 +23,38 @@ C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\login.dto.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\signup.dto.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\interfaces\user.interface.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\schemas\user.schema.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.controller.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.gateway.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.service.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\dto\create-channel.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\dto\send-message.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\interfaces\channel.interface.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\interfaces\message.interface.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\schemas\channel.schema.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\schemas\message.schema.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\filters\http-exception.filter.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\interceptors\logging.interceptor.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\config\config.module.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\database\database.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.controller.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.gateway.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.service.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friend-request.interface.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friend-request.schema.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friends.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\handle-friend-request.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\remove-friend.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\send-friend-request.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\interfaces\friend-request.interface.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\schemas\friend-request.schema.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.service.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\types\express-session.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\test\app.e2e-spec.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\test\chat.e2e-spec.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\test\friends.e2e-spec.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\test\jest-e2e.json
 C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-deployment.yaml
 C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-service.yaml
@@ -41,6 +65,25 @@ C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-deployment.yaml
 C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-service.yaml
 C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-deployment.yaml
 C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-service.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\test.yaml
+C:\Users\Tyler\workspace\CampusConnect1\frontend\.gitignore
+C:\Users\Tyler\workspace\CampusConnect1\frontend\Dockerfile
+C:\Users\Tyler\workspace\CampusConnect1\frontend\package.json
+C:\Users\Tyler\workspace\CampusConnect1\frontend\README.md
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\favicon.ico
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\index.html
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\logo192.png
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\logo512.png
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\manifest.json
+C:\Users\Tyler\workspace\CampusConnect1\frontend\public\robots.txt
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.css
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.js
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.test.js
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\index.css
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\index.js
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\logo.svg
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\reportWebVitals.js
+C:\Users\Tyler\workspace\CampusConnect1\frontend\src\setupTests.js
 C:\Users\Tyler\workspace\CampusConnect1\nginx\Dockerfile
 C:\Users\Tyler\workspace\CampusConnect1\nginx\nginx.conf
 
@@ -49,6 +92,76 @@ C:\Users\Tyler\workspace\CampusConnect1\nginx\nginx.conf
 --- C:\Users\Tyler\workspace\CampusConnect1\.dockerignore ---
 node_modules
 **/node_modules
+
+--- C:\Users\Tyler\workspace\CampusConnect1\.gitignore ---
+node_modules
+**/node_modules
+
+--- C:\Users\Tyler\workspace\CampusConnect1\bootstrap.sh ---
+#!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
+
+echo "=== Starting bootstrap process ==="
+
+# Update package list and install essential packages
+sudo apt update && sudo apt install -y apt-transport-https ca-certificates curl software-properties-common conntrack cri-tools
+
+# Install Docker if not already installed
+if ! command -v docker &>/dev/null; then
+    echo "Installing Docker..."
+    sudo apt install -y docker.io
+    sudo usermod -aG docker $USER
+else
+    echo "Docker already installed: $(docker --version)"
+fi
+
+# Install kubectl if not installed
+if ! command -v kubectl &>/dev/null; then
+    echo "Installing kubectl..."
+    sudo curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/v1.32.0/bin/linux/arm64/kubectl"
+    sudo chmod +x /usr/local/bin/kubectl
+else
+    echo "kubectl already installed: $(kubectl version --client)"
+fi
+
+# Install Minikube if not installed
+if ! command -v minikube &>/dev/null; then
+    echo "Installing Minikube..."
+    curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64
+    sudo install minikube-linux-arm64 /usr/local/bin/minikube
+    rm -f minikube-linux-arm64
+else
+    echo "Minikube already installed: $(minikube version)"
+fi
+
+# Ensure necessary directories exist and are owned by the user
+mkdir -p $HOME/.kube $HOME/.minikube
+sudo chown -R $USER:$USER $HOME/.kube $HOME/.minikube
+
+# Start Minikube using the "none" driver
+if ! minikube status | grep -q "host: Running"; then
+    echo "Starting Minikube..."
+    minikube start --driver=none
+else
+    echo "Minikube is already running."
+fi
+
+# Verify installations
+echo "Docker version:"; docker --version
+echo "kubectl version:"; kubectl version --client
+echo "Minikube status:"; minikube status
+
+# Create a custom "myapp" status command
+sudo tee /usr/local/bin/myapp << 'EOF'
+#!/bin/bash
+echo "==== MyApp Status ===="
+kubectl get nodes
+kubectl get pods -A
+EOF
+sudo chmod +x /usr/local/bin/myapp
+
+echo "=== Bootstrap process complete ==="
+
 
 --- C:\Users\Tyler\workspace\CampusConnect1\log.py ---
 import os
@@ -107,63 +220,34 @@ if __name__ == "__main__":
 --- C:\Users\Tyler\workspace\CampusConnect1\profile.py ---
 import geni.portal as portal
 import geni.rspec.pg as rspec
+import textwrap
 
-# Create a request object to define the profile
+# Create a request object to define the profile.
 request = portal.context.makeRequestRSpec()
 
-# Define the primary node for Kubernetes and Docker
-k8s_node = request.RawPC("k8s-master")
-k8s_node.hardware_type = "m400"
+# Define the primary node.
+node = request.RawPC("node")
+node.hardware_type = "m400"
 
-# Install the latest versions of Docker, Minikube, and kubectl
-k8s_node.addService(rspec.Execute(
-    shell="bash",
-    command="""
-    # Update package list
-    sudo apt update &&
-    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common &&
-    
-    # Install Docker (Ubuntu package)
-    sudo apt install -y docker.io &&
+# Define a shell script command that clones the repository and runs bootstrap.sh.
+command = textwrap.dedent("""\
+    cd /local
+    if [ ! -d repository ]; then
+      echo "Cloning repository..."
+      git clone https://github.com/TylerGeiger513/CampusConnect repository
+    else
+      echo "Repository already exists. Pulling latest changes..."
+      cd repository && git pull && cd ..
+    fi
+    cd repository
+    chmod +x bootstrap.sh
+    ./bootstrap.sh
+    """)
 
-    # Add user to Docker group to avoid permission errors
-    sudo usermod -aG docker $(whoami) &&
-    echo 'newgrp docker' >> ~/.bashrc  # Apply group change after login
+# Add the startup service to run the command.
+node.addService(rspec.Execute(shell="bash", command=command))
 
-    # Install latest kubectl (Fix: Use sudo and correct path)
-    sudo curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" &&
-    sudo chmod +x /usr/local/bin/kubectl
-
-    # Install latest Minikube (Fix: Use sudo and correct path)
-    sudo curl -Lo /usr/local/bin/minikube "https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64" &&
-    sudo chmod +x /usr/local/bin/minikube
-
-    # Start Minikube (Fix: Use correct permissions)
-    sudo minikube start --driver=docker
-
-    # Verify installation
-    docker --version &&
-    kubectl version --client &&
-    minikube version
-
-    # Add status message on SSH login
-    echo 'echo "==== MyApp Status ===="; kubectl get nodes; kubectl get pods -A' >> ~/.bashrc
-
-    # Create a "myapp" status command
-    echo '#!/bin/bash' | sudo tee /usr/local/bin/myapp > /dev/null
-    echo 'echo "==== MyApp Status ===="' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'kubectl get nodes' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'kubectl get pods -A' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'kubectl get services' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'NODE_PORT=$(kubectl get svc myapp-nginx -o=jsonpath="{.spec.ports[0].nodePort}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'NODE_IP=$(kubectl get nodes -o=jsonpath="{.items[0].status.addresses[0].address}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
-    echo 'echo "MyApp is accessible at: http://$NODE_IP:$NODE_PORT"' | sudo tee -a /usr/local/bin/myapp > /dev/null
-
-    sudo chmod +x /usr/local/bin/myapp
-    """
-))
-
-# Output the RSpec
+# Output the RSpec.
 portal.context.printRequestRSpec()
 
 
@@ -192,7 +276,6 @@ def run_command(command, error_message, exit_on_fail=True, cwd=None):
             log_error_pods("app=myapp-backend")
             sys.exit(1)
 
-
 def log_error_pods(label: str):
     """Retrieve pods by label and log their logs if they are in an error state."""
     try:
@@ -202,7 +285,6 @@ def log_error_pods(label: str):
         pods = json.loads(pods_output)
         for pod in pods.get("items", []):
             pod_name = pod["metadata"]["name"]
-            # Check if pod is not ready
             conditions = pod["status"].get("conditions", [])
             ready = any(c.get("type") == "Ready" and c.get("status") == "True" for c in conditions)
             if not ready:
@@ -215,20 +297,53 @@ def log_error_pods(label: str):
     except Exception as ex:
         logging.error("Failed to log error pods: " + str(ex))
 
-def build_docker_images():
-    logging.info("Building Docker images...")
+def build_backend_docker_image():
+    logging.info("Building backend Docker image...")
     project_root = os.getcwd()
     backend_path = os.path.join(project_root, "backend")
-    nginx_path = os.path.join(project_root, "nginx")
     run_command(
         ["docker", "build", "--no-cache", "-t", "myapp-backend:latest", backend_path],
         "Failed to build backend image."
     )
+
+def build_nginx_docker_image():
+    logging.info("Building nginx Docker image...")
+    # Use the project root as build context so the Dockerfile can access both the nginx and frontend folders.
     run_command(
-        ["docker", "build", "--no-cache", "-t", "myapp-nginx:latest", nginx_path],
+        ["docker", "build", "--no-cache", "-t", "myapp-nginx:latest", "-f", os.path.join("nginx", "Dockerfile"), "."],
         "Failed to build nginx image."
     )
-    logging.info("Docker images built successfully.")
+
+def build_docker_images():
+    logging.info("Building all Docker images...")
+    build_backend_docker_image()
+    build_nginx_docker_image()
+    logging.info("All Docker images built successfully.")
+
+def run_backend_tests():
+    logging.info("Running backend tests (npm run test:e2e)...")
+    project_root = os.getcwd()
+    backend_path = os.path.join(project_root, "backend")
+    # Run e2e tests defined in the backend package.json
+    run_command(["npm.cmd", "run", "test:e2e"], "Backend tests failed.", cwd=backend_path)
+    logging.info("Backend tests passed.")
+
+def run_inter_container_tests():
+    logging.info("Running inter-container connectivity test...")
+    # Apply the test job manifest from deploy/k8s/test.yaml
+    project_root = os.getcwd()
+    k8s_dir = os.path.join(project_root, "deploy", "k8s")
+    run_command(["kubectl", "apply", "-f", os.path.join(k8s_dir, "test.yaml")],
+                "Failed to apply test job manifest.")
+    # Wait for the test job to complete (timeout after 60 seconds)
+    run_command(["kubectl", "wait", "--for=condition=complete", "job/inter-container-test", "--timeout=60s"],
+                "Inter-container test job did not complete successfully.")
+    # Fetch and log the output of the test job
+    output = subprocess.check_output(["kubectl", "logs", "job/inter-container-test"], text=True)
+    logging.info("Inter-container test job output:\n" + output)
+    # Clean up the test job
+    run_command(["kubectl", "delete", "job", "inter-container-test"],
+                "Failed to delete test job.")
 
 def deploy_kubernetes():
     logging.info("Deploying to Kubernetes...")
@@ -249,18 +364,18 @@ def deploy_kubernetes():
     logging.info("Kubernetes deployment successful.")
 
 def print_service_info():
-    logging.info("Retrieving Nginx service information...")
+    logging.info("Retrieving service information...")
     try:
-        output = subprocess.check_output(
+        output_nginx = subprocess.check_output(
             ["kubectl", "get", "service", "myapp-nginx", "-o", "json"], text=True
         )
-        svc = json.loads(output)
-        node_port = svc["spec"]["ports"][0]["nodePort"]
+        svc_nginx = json.loads(output_nginx)
+        node_port_nginx = svc_nginx["spec"]["ports"][0]["nodePort"]
         node_ip = get_node_ip()
         if node_ip:
-            logging.info(f"Nginx is accessible at http://{node_ip}:{node_port}")
+            logging.info(f"Nginx is accessible at http://{node_ip}:{node_port_nginx}")
         else:
-            logging.error("Could not determine Node IP. Please check your Kubernetes cluster configuration.")
+            logging.error("Could not determine Node IP.")
     except Exception as e:
         logging.error("Error retrieving service info: " + str(e))
 
@@ -283,123 +398,50 @@ def get_node_ip():
         logging.error("Error retrieving node IP: " + str(e))
     return None
 
-def clear_kubernetes_resources():
-    logging.info("Clearing Kubernetes resources...")
-    project_root = os.getcwd()
-    k8s_dir = os.path.join(project_root, "deploy", "k8s")
-    run_command(["kubectl", "delete", "-f", k8s_dir],
-                "Failed to delete Kubernetes resources.", exit_on_fail=False)
-    logging.info("Kubernetes resources cleared.")
-
-def remove_docker_images():
-    logging.info("Removing local Docker images...")
-    for image in ["myapp-backend:latest", "myapp-nginx:latest"]:
-        run_command(["docker", "rmi", "-f", image],
-                    f"Failed to remove Docker image {image}.", exit_on_fail=False)
-    logging.info("Local Docker images removed.")
+class DeployTestCommand(Command):
+    description = ("Run backend tests and inter-container connectivity test; "
+                   "if both pass, build images, deploy Kubernetes resources, and print service info.")
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        # Run backend tests first
+        run_backend_tests()
+        # Run inter-container connectivity test
+        run_inter_container_tests()
+        # If both tests pass, build images and deploy to Kubernetes
+        build_docker_images()
+        deploy_kubernetes()
+        print_service_info()
+        logging.info("Deployment with tests succeeded.")
 
 class DeployCommand(Command):
     description = "Build Docker images, deploy Kubernetes resources, and print service information."
     user_options = []
-
     def initialize_options(self):
         pass
-
     def finalize_options(self):
         pass
-
     def run(self):
         build_docker_images()
         deploy_kubernetes()
         print_service_info()
 
 class ResetCommand(Command):
-    description = "Clear Kubernetes resources and local Docker images, then rebuild and redeploy everything."
+    description = "Delete all Kubernetes resources."
     user_options = []
-
     def initialize_options(self):
         pass
-
     def finalize_options(self):
         pass
-
     def run(self):
-        clear_kubernetes_resources()
-        remove_docker_images()
-        build_docker_images()
-        deploy_kubernetes()
-        print_service_info()
-
-class TestCommand(Command):
-    description = "Run tests and ensure they pass before starting deployment."
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        logging.info("Running tests...")
+        logging.info("Deleting all Kubernetes resources...")
         project_root = os.getcwd()
-        backend_path = os.path.join(project_root, "backend")
-        run_command(["npm.cmd", "run", "test:e2e"],
-                    "Tests failed. Aborting deployment.",
-                    cwd=backend_path)
-        logging.info("All tests passed.")
-
-class PauseCommand(Command):
-    description = "Pause the deployments by scaling replicas to 0."
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        logging.info("Pausing deployments...")
-        run_command(["kubectl", "scale", "deployment/myapp-backend", "--replicas=0"],
-                    "Failed to pause backend deployment.")
-        run_command(["kubectl", "scale", "deployment/myapp-nginx", "--replicas=0"],
-                    "Failed to pause nginx deployment.")
-        logging.info("Deployments paused.")
-
-class ResumeCommand(Command):
-    description = "Resume the deployments by scaling replicas back to 1."
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        logging.info("Resuming deployments...")
-        run_command(["kubectl", "scale", "deployment/myapp-backend", "--replicas=1"],
-                    "Failed to resume backend deployment.")
-        run_command(["kubectl", "scale", "deployment/myapp-nginx", "--replicas=1"],
-                    "Failed to resume nginx deployment.")
-        logging.info("Deployments resumed.")
-
-class ShutdownCommand(Command):
-    description = "Shutdown the application by clearing all Kubernetes resources and local Docker images."
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        logging.info("Shutting down application...")
-        clear_kubernetes_resources()
-        remove_docker_images()
-        logging.info("Application shutdown complete.")
+        k8s_dir = os.path.join(project_root, "deploy", "k8s")
+        run_command(["kubectl", "delete", "-f", k8s_dir], "Failed to delete Kubernetes resources.", exit_on_fail=False)
+        logging.info("All Kubernetes resources deleted.")
 
 def main():
     build_docker_images()
@@ -413,10 +455,7 @@ setup(
     cmdclass={
         'deploy': DeployCommand,
         'reset': ResetCommand,
-        'testdeploy': TestCommand,
-        'pause': PauseCommand,
-        'resume': ResumeCommand,
-        'shutdown': ShutdownCommand,
+        'deploytest': DeployTestCommand,
     },
     entry_points={
         'console_scripts': [
@@ -740,6 +779,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
+  app.setGlobalPrefix('api');
+
   // Global pipes, filters, interceptors
   app.useGlobalPipes(
     new ValidationPipe({
@@ -1006,6 +1047,306 @@ UserSchema.methods.comparePassword = function (candidatePassword: string): Promi
 };
 
 
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.controller.ts ---
+import { Controller, Post, Get, Body, Req, HttpException, HttpStatus, Param } from '@nestjs/common';
+import { Request } from 'express';
+import { ChatService } from './chat.service';
+import { SendMessageDto } from './dto/send-message.dto';
+import { CreateChannelDto } from './dto/create-channel.dto';
+
+/**
+ * Controller for managing chat channels and messages.
+ */
+@Controller('chat')
+export class ChatController {
+  constructor(private readonly chatService: ChatService) {}
+
+  /**
+   * Create or retrieve a direct channel between the current user and another user.
+   */
+  @Post('channel')
+  async createOrGetChannel(
+    @Req() req: Request,
+    @Body() createChannelDto: CreateChannelDto,
+  ) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.chatService.createOrGetDirectChannel(userId, createChannelDto.recipientId);
+  }
+
+  /**
+   * Send a message in a channel.
+   */
+  @Post('message')
+  async sendMessage(
+    @Req() req: Request,
+    @Body() sendMessageDto: SendMessageDto,
+  ) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.chatService.sendMessage(userId, sendMessageDto.channelId, sendMessageDto.content);
+  }
+
+  /**
+   * Retrieve all messages for a channel.
+   */
+  @Get('channel/:channelId/messages')
+  async getMessages(@Req() req: Request, @Param('channelId') channelId: string) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.chatService.getMessages(channelId);
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.gateway.ts ---
+import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
+
+/**
+ * Gateway to handle WebSocket communications for the chat feature.
+ */
+@WebSocketGateway({
+  cors: {
+    origin: '*', // In production, restrict origins as needed.
+  },
+})
+export class ChatGateway {
+  @WebSocketServer()
+  server: Server;
+
+  private readonly logger = new Logger(ChatGateway.name);
+
+  /**
+   * Allows a client to join a room for a specific channel.
+   * Clients should emit a 'joinChannel' event with the channel ID.
+   */
+  @SubscribeMessage('joinChannel')
+  handleJoinChannel(@MessageBody() data: { channelId: string }, @ConnectedSocket() client: Socket) {
+    client.join(data.channelId);
+    this.logger.log(`Socket ${client.id} joined channel room ${data.channelId}`);
+  }
+
+  /**
+   * Notifies all clients in a channel room of a new message.
+   * @param channelId The channel room identifier.
+   * @param message The message data.
+   */
+  notifyNewMessage(channelId: string, message: any) {
+    this.server.to(channelId).emit('newMessage', message);
+    this.logger.log(`Notified channel ${channelId} of new message`);
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.module.ts ---
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ChatController } from './chat.controller';
+import { ChatService } from './chat.service';
+import { ChatGateway } from './chat.gateway';
+import { MessageSchema } from './schemas/message.schema';
+import { ChannelSchema } from './schemas/channel.schema';
+import { UserSchema } from '../auth/schemas/user.schema';
+
+@Module({
+  imports: [
+    // Define the Message and Channel schemas; we also import User schema for population if needed.
+    MongooseModule.forFeature([
+      { name: 'Message', schema: MessageSchema },
+      { name: 'Channel', schema: ChannelSchema },
+      { name: 'User', schema: UserSchema },
+    ]),
+  ],
+  controllers: [ChatController],
+  providers: [ChatService, ChatGateway],
+  exports: [ChatService],
+})
+export class ChatModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\chat.service.ts ---
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { ChatGateway } from './chat.gateway';
+
+/**
+ * ChatService handles creation/retrieval of channels and messages.
+ */
+@Injectable()
+export class ChatService {
+  private readonly logger = new Logger(ChatService.name);
+
+  constructor(
+    @InjectModel('Channel') private readonly channelModel: Model<any>,
+    @InjectModel('Message') private readonly messageModel: Model<any>,
+    @InjectModel('User') private readonly userModel: Model<any>,
+    private readonly chatGateway: ChatGateway,
+  ) {}
+
+  /**
+   * Creates a direct channel between two users if it does not exist, or returns the existing channel.
+   * @param userId The ID of the current user.
+   * @param recipientId The ID of the other user.
+   */
+  async createOrGetDirectChannel(userId: string, recipientId: string): Promise<any> {
+    // Ensure the users are different.
+    if (userId === recipientId) {
+      throw new HttpException('Cannot create a channel with yourself', HttpStatus.BAD_REQUEST);
+    }
+    // Check that recipient exists.
+    const recipient = await this.userModel.findById(recipientId);
+    if (!recipient) {
+      throw new HttpException('Recipient user not found.', HttpStatus.NOT_FOUND);
+    }
+    // Look for an existing direct channel with exactly these two participants.
+    let channel = await this.channelModel.findOne({
+      type: 'direct',
+      participants: { $all: [userId, recipientId], $size: 2 },
+    });
+    if (!channel) {
+      channel = new this.channelModel({
+        type: 'direct',
+        participants: [userId, recipientId],
+      });
+      await channel.save();
+    }
+    return channel;
+  }
+
+  /**
+   * Sends a message in the specified channel.
+   * @param senderId The ID of the user sending the message.
+   * @param channelId The ID of the channel.
+   * @param content The message content.
+   */
+  async sendMessage(senderId: string, channelId: string, content: string): Promise<any> {
+    // Check that the channel exists.
+    const channel = await this.channelModel.findById(channelId);
+    if (!channel) {
+      throw new HttpException('Channel not found', HttpStatus.NOT_FOUND);
+    }
+    // Check that the sender is a participant in the channel.
+    if (!channel.participants.includes(senderId)) {
+      throw new HttpException('Not authorized to send messages in this channel', HttpStatus.FORBIDDEN);
+    }
+    const message = new this.messageModel({
+      channel: channelId,
+      sender: senderId,
+      content,
+    });
+    await message.save();
+
+    // Emit the new message to all connected clients in the channel.
+    this.chatGateway.notifyNewMessage(channelId, message);
+    return { message: 'Message sent.', data: message };
+  }
+
+  /**
+   * Retrieves all messages for a given channel, sorted chronologically.
+   * @param channelId The channel ID.
+   */
+  async getMessages(channelId: string): Promise<any> {
+    const messages = await this.messageModel.find({ channel: channelId }).sort({ createdAt: 1 });
+    return { messages };
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\dto\create-channel.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+/**
+ * DTO for creating or retrieving a direct channel.
+ */
+export class CreateChannelDto {
+  @IsString()
+  @IsNotEmpty()
+  recipientId: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\dto\send-message.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+/**
+ * DTO for sending a message in a channel.
+ */
+export class SendMessageDto {
+  @IsString()
+  @IsNotEmpty()
+  channelId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\interfaces\channel.interface.ts ---
+import { Document, Types } from 'mongoose';
+
+export interface Channel extends Document {
+  type: 'direct' | 'group';
+  participants: Types.ObjectId[];
+  name?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\interfaces\message.interface.ts ---
+import { Document, Types } from 'mongoose';
+
+export interface Message extends Document {
+  channel: Types.ObjectId;
+  sender: Types.ObjectId;
+  content: string;
+  readBy: Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\schemas\channel.schema.ts ---
+import * as mongoose from 'mongoose';
+
+export const ChannelSchema = new mongoose.Schema(
+  {
+    // Type can be extended later to support group channels, classroom channels, etc.
+    type: { type: String, enum: ['direct', 'group'], required: true, default: 'direct' },
+    // List of participant user IDs.
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
+    // Optional channel name (for groups).
+    name: { type: String, trim: true },
+  },
+  { timestamps: true },
+);
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\chat\schemas\message.schema.ts ---
+import * as mongoose from 'mongoose';
+
+export const MessageSchema = new mongoose.Schema(
+  {
+    channel: { type: mongoose.Schema.Types.ObjectId, ref: 'Channel', required: true },
+    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    content: { type: String, required: true },
+    // Optional: readBy array for future read-receipt functionality.
+    readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  },
+  { timestamps: true },
+);
+
+
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\filters\http-exception.filter.ts ---
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -1097,11 +1438,450 @@ import { ConfigService } from '@nestjs/config';
 export class DatabaseModule {}
 
 
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.controller.ts ---
+import { Controller, Post, Get, Body, Req, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Request } from 'express';
+import { FriendsService } from './friends.service';
+import { SendFriendRequestDto } from './dto/send-friend-request.dto';
+import { HandleFriendRequestDto } from './dto/handle-friend-request.dto';
+import { RemoveFriendDto } from './dto/remove-friend.dto';
+
+@Controller('friends')
+export class FriendsController {
+  constructor(private readonly friendsService: FriendsService) {}
+
+  /**
+   * Send a friend request to another user.
+   * @param req - The request object containing session data.
+   * @param sendFriendRequestDto - DTO containing recipient identifier.
+   */
+  @Post('request')
+  async sendFriendRequest(
+    @Req() req: Request,
+    @Body() sendFriendRequestDto: SendFriendRequestDto,
+  ) {
+    const requesterId = req.session?.userId;
+    if (!requesterId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.sendFriendRequest(requesterId, sendFriendRequestDto);
+  }
+
+  /**
+   * Accept a friend request.
+   * @param req - The request object containing session data.
+   * @param handleFriendRequestDto - DTO containing the friend request ID.
+   */
+  @Post('accept')
+  async acceptFriendRequest(
+    @Req() req: Request,
+    @Body() handleFriendRequestDto: HandleFriendRequestDto,
+  ) {
+    const recipientId = req.session?.userId;
+    if (!recipientId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.acceptFriendRequest(recipientId, handleFriendRequestDto.requestId);
+  }
+
+  /**
+   * Decline a friend request.
+   * @param req - The request object containing session data.
+   * @param handleFriendRequestDto - DTO containing the friend request ID.
+   */
+  @Post('decline')
+  async declineFriendRequest(
+    @Req() req: Request,
+    @Body() handleFriendRequestDto: HandleFriendRequestDto,
+  ) {
+    const recipientId = req.session?.userId;
+    if (!recipientId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.declineFriendRequest(recipientId, handleFriendRequestDto.requestId);
+  }
+
+  /**
+   * Revoke a friend request.
+   * @param req - The request object containing session data.
+   * @param handleFriendRequestDto - DTO containing the friend request ID.
+   */
+  @Post('revoke')
+  @HttpCode(HttpStatus.OK)
+  async revokeFriendRequest(
+    @Req() req: Request,
+    @Body() handleFriendRequestDto: HandleFriendRequestDto,
+  ) {
+    const requesterId = req.session?.userId;
+    if (!requesterId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.revokeFriendRequest(requesterId, handleFriendRequestDto.requestId);
+  }
+
+  /**
+   * Remove an existing friend.
+   * @param req - The request object containing session data.
+   * @param removeFriendDto - DTO containing the friend's ID.
+   */
+  @Post('remove')
+  async removeFriend(@Req() req: Request, @Body() removeFriendDto: RemoveFriendDto) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.removeFriend(userId, removeFriendDto.friendId);
+  }
+
+  /**
+   * Retrieve incoming friend requests.
+   * @param req - The request object containing session data.
+   */
+  @Get('requests')
+  async getFriendRequests(@Req() req: Request) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.getFriendRequests(userId);
+  }
+
+  /**
+   * Retrieve the friend list for the current user.
+   * @param req - The request object containing session data.
+   */
+  @Get('list')
+  async getFriendList(@Req() req: Request) {
+    const userId = req.session?.userId;
+    if (!userId) {
+      throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+    }
+    return this.friendsService.getFriendList(userId);
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.gateway.ts ---
+import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
+
+@WebSocketGateway({
+  cors: {
+    origin: '*', // In production, restrict origins as needed for security
+  },
+})
+export class FriendsGateway {
+  @WebSocketServer()
+  server: Server;
+
+  private readonly logger = new Logger(FriendsGateway.name);
+
+  /**
+   * Handle user joining their personal room.
+   * Clients should emit a 'join' event with their userId to join their room.
+   * @param userData - Object containing the user's ID.
+   * @param client - The connected socket.
+   */
+  @SubscribeMessage('join')
+  handleJoin(@MessageBody() userData: { userId: string }, @ConnectedSocket() client: Socket) {
+    client.join(userData.userId);
+    this.logger.log(`Socket ${client.id} joined room ${userData.userId}`);
+  }
+
+  /**
+   * Notify a user of a new friend request via WebSocket.
+   * @param recipientId - The ID of the recipient user.
+   * @param data - Data related to the friend request.
+   */
+  notifyFriendRequest(recipientId: string, data: any) {
+    this.server.to(recipientId).emit('friendRequest', data);
+    this.logger.log(`Notified user ${recipientId} of a new friend request.`);
+  }
+}
+
+
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.module.ts ---
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { FriendsController } from './friends.controller';
+import { FriendsService } from './friends.service';
+import { FriendsGateway } from './friends.gateway';
+import { FriendRequestSchema } from './schemas/friend-request.schema';
+import { UserSchema } from '../auth/schemas/user.schema';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: 'FriendRequest', schema: FriendRequestSchema },
+      { name: 'User', schema: UserSchema },
+    ]),
+  ],
+  controllers: [FriendsController],
+  providers: [FriendsService, FriendsGateway],
+  exports: [FriendsService],
+})
+export class FriendsModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.service.ts ---
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { SendFriendRequestDto } from './dto/send-friend-request.dto';
+import { FriendsGateway } from './friends.gateway';
+import { FriendRequest } from './interfaces/friend-request.interface';
+import { User } from '../auth/interfaces/user.interface';
+
+@Injectable()
+export class FriendsService {
+  private readonly logger = new Logger(FriendsService.name);
+
+  constructor(
+    @InjectModel('FriendRequest') private readonly friendRequestModel: Model<FriendRequest>,
+    @InjectModel('User') private readonly userModel: Model<User>,
+    private readonly friendsGateway: FriendsGateway,
+  ) {}
+
+  /**
+   * Sends a friend request from the requester to the recipient.
+   * @param requesterId - The ID of the user sending the request.
+   * @param dto - DTO containing recipient identifier (username, email, or user ID).
+   */
+  async sendFriendRequest(
+    requesterId: string,
+    dto: SendFriendRequestDto,
+  ): Promise<{ message: string }> {
+    let recipientUser;
+    const recipientIdentifier = dto.recipient;
+    // If the identifier is a valid ObjectId, search by _id.
+    if (recipientIdentifier.match(/^[0-9a-fA-F]{24}$/)) {
+      recipientUser = await this.userModel.findById(recipientIdentifier);
+    } else {
+      // Otherwise, search by username or email.
+      recipientUser = await this.userModel.findOne({
+        $or: [{ username: recipientIdentifier }, { email: recipientIdentifier }],
+      });
+    }
+    if (!recipientUser) {
+      throw new HttpException('Recipient user not found.', HttpStatus.NOT_FOUND);
+    }
+    if (requesterId === recipientUser._id.toString()) {
+      throw new HttpException('You cannot send a friend request to yourself.', HttpStatus.BAD_REQUEST);
+    }
+
+    // Check if a friend request already exists.
+    const existingRequest = await this.friendRequestModel.findOne({
+      requester: requesterId,
+      recipient: recipientUser._id,
+    });
+    if (existingRequest) {
+      throw new HttpException('Friend request already sent.', HttpStatus.BAD_REQUEST);
+    }
+
+    // Check if the users are already friends.
+    const requester = await this.userModel.findById(requesterId);
+    if (requester && requester.friends && requester.friends.includes(recipientUser._id)) {
+      throw new HttpException('User is already your friend.', HttpStatus.BAD_REQUEST);
+    }
+
+    const friendRequest = new this.friendRequestModel({
+      requester: requesterId,
+      recipient: recipientUser._id,
+    });
+    await friendRequest.save();
+
+    // Emit a WebSocket event to notify the recipient.
+    this.friendsGateway.notifyFriendRequest(recipientUser._id.toString(), {
+      requestId: friendRequest._id,
+      from: requesterId,
+    });
+
+    return { message: 'Friend request sent successfully.' };
+  }
+
+  /**
+   * Accepts a friend request.
+   * @param recipientId - The ID of the user accepting the request.
+   * @param requestId - The ID of the friend request.
+   */
+  async acceptFriendRequest(recipientId: string, requestId: string): Promise<{ message: string }> {
+    const friendRequest = await this.friendRequestModel.findById(requestId);
+    if (!friendRequest) {
+      throw new HttpException('Friend request not found.', HttpStatus.NOT_FOUND);
+    }
+    if (friendRequest.recipient.toString() !== recipientId) {
+      throw new HttpException('You are not authorized to accept this friend request.', HttpStatus.FORBIDDEN);
+    }
+    // Add each user to the other’s friend list.
+    await this.userModel.findByIdAndUpdate(recipientId, { $addToSet: { friends: friendRequest.requester } });
+    await this.userModel.findByIdAndUpdate(friendRequest.requester, { $addToSet: { friends: recipientId } });
+    await friendRequest.deleteOne();
+    return { message: 'Friend request accepted.' };
+  }
+
+  /**
+   * Declines a friend request.
+   * @param recipientId - The ID of the user declining the request.
+   * @param requestId - The ID of the friend request.
+   */
+  async declineFriendRequest(recipientId: string, requestId: string): Promise<{ message: string }> {
+    const friendRequest = await this.friendRequestModel.findById(requestId);
+    if (!friendRequest) {
+      throw new HttpException('Friend request not found.', HttpStatus.NOT_FOUND);
+    }
+    if (friendRequest.recipient.toString() !== recipientId) {
+      throw new HttpException('You are not authorized to decline this friend request.', HttpStatus.FORBIDDEN);
+    }
+    await friendRequest.deleteOne();
+    return { message: 'Friend request declined.' };
+  }
+
+  /**
+   * Revokes a friend request.
+   * @param requesterId - The ID of the user revoking the request.
+   * @param requestId - The ID of the friend request.
+   */
+  async revokeFriendRequest(requesterId: string, requestId: string): Promise<{ message: string }> {
+    const friendRequest = await this.friendRequestModel.findById(requestId);
+    if (!friendRequest) {
+      throw new HttpException('Friend request not found.', HttpStatus.NOT_FOUND);
+    }
+    if (friendRequest.requester.toString() !== requesterId) {
+      throw new HttpException('You are not authorized to revoke this friend request.', HttpStatus.FORBIDDEN);
+    }
+    await friendRequest.deleteOne();
+    return { message: 'Friend request revoked.' };
+  }
+
+  /**
+   * Removes a friend from the user's friend list.
+   * @param userId - The ID of the user.
+   * @param friendId - The ID of the friend to remove.
+   */
+  async removeFriend(userId: string, friendId: string): Promise<{ message: string }> {
+    await this.userModel.findByIdAndUpdate(userId, { $pull: { friends: friendId } });
+    await this.userModel.findByIdAndUpdate(friendId, { $pull: { friends: userId } });
+    return { message: 'Friend removed successfully.' };
+  }
+
+  /**
+   * Retrieves all incoming friend requests for the user.
+   * @param userId - The ID of the user.
+   */
+  async getFriendRequests(userId: string): Promise<{ friendRequests: any }> {
+    const requests = await this.friendRequestModel.find({ recipient: userId })
+      .populate('requester', 'username email');
+    return { friendRequests: requests };
+  }
+
+  /**
+   * Retrieves the friend list for the user.
+   * @param userId - The ID of the user.
+   */
+  async getFriendList(userId: string): Promise<{ friends: any }> {
+    const user = await this.userModel.findById(userId).populate('friends', 'username email');
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+    }
+    return { friends: user.friends };
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friend-request.interface.ts ---
+import { Document, Types } from 'mongoose';
+
+/**
+ * Interface for a Friend Request document.
+ */
+export interface FriendRequest extends Document {
+  requester: Types.ObjectId;
+  recipient: Types.ObjectId;
+  createdAt: Date;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friend-request.schema.ts ---
+import * as mongoose from 'mongoose';
+
+export const FriendRequestSchema = new mongoose.Schema(
+  {
+    requester: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+);
 
 
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friends.dto.ts ---
 const { isEmpty, isString } = require('class-validator');
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\handle-friend-request.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+/**
+ * DTO for handling a friend request (accept, decline, or revoke).
+ */
+export class HandleFriendRequestDto {
+  @IsString()
+  @IsNotEmpty()
+  requestId: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\remove-friend.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+/**
+ * DTO for removing a friend.
+ */
+export class RemoveFriendDto {
+  @IsString()
+  @IsNotEmpty()
+  friendId: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\send-friend-request.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+/**
+ * DTO for sending a friend request.
+ */
+export class SendFriendRequestDto {
+  @IsString()
+  @IsNotEmpty()
+  recipient: string; // This can be either a username or a user ID
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\interfaces\friend-request.interface.ts ---
+import { Document, Types } from 'mongoose';
+
+/**
+ * Interface for a Friend Request document.
+ */
+export interface FriendRequest extends Document {
+  requester: Types.ObjectId;
+  recipient: Types.ObjectId;
+  createdAt: Date;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\schemas\friend-request.schema.ts ---
+import * as mongoose from 'mongoose';
+
+export const FriendRequestSchema = new mongoose.Schema(
+  {
+    requester: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+);
+
 
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts ---
 import { Module, Global } from '@nestjs/common';
@@ -1206,203 +1986,575 @@ export {};
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\test\app.e2e-spec.ts ---
 /// <reference types="jest" />
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AuthModule } from './../src/auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { getConnectionToken } from '@nestjs/mongoose'; // << Important
-import { Connection } from 'mongoose';                // << Important
+import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 import session from 'express-session';
+import { AuthService } from '../src/auth/auth.service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let httpServer: any;
-
-  // We'll store cookies here so that subsequent tests can reuse the session
   let cookieJar: string[] = [];
-
-  // This will reference the same Mongoose connection that NestJS creates
   let connection: Connection;
+  let authService: AuthService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AuthModule,
-        // Connect to a dedicated test DB
-        MongooseModule.forRoot('mongodb://localhost:27017/campusconnect_test'),
+        // Use a dedicated test DB for auth tests.
+        MongooseModule.forRoot('mongodb://localhost:27017/campusconnect_auth_test'),
       ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
 
-    // Add session middleware for e2e tests
+    // Global validation pipe for DTO validation
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+
+    // Session middleware.
     app.use(
       session({
-        secret: 'testSecret', // for local testing only
+        secret: 'testSecret',
         resave: false,
         saveUninitialized: false,
       }),
     );
 
+    // Set global prefix to /api.
+    app.setGlobalPrefix('api');
+
     await app.init();
     httpServer = app.getHttpServer();
 
+    connection = moduleFixture.get(getConnectionToken());
 
-    // Retrieve the NestJS-managed connection so we can drop the DB later
-    const connectionToken = getConnectionToken(); // typically 'DatabaseConnection'
-    connection = moduleFixture.get<Connection>(connectionToken);
-
-    // Drop the entire test database so it's fresh for this run
-    await connection
-      .useDb('campusconnect_test')
-      .dropDatabase();
-
+    // Create a test user for login/profile/deletion tests.
+    authService = moduleFixture.get(AuthService);
+    // Ensure the test DB is clean.
+    await connection.useDb('campusconnect_auth_test').dropDatabase();
+    await authService.signup({ username: 'testuser', email: 'testuser@example.com', password: 'password123' });
   });
 
   afterAll(async () => {
-    // Drop the entire test database so it's fresh for next run
-    // ...only do this if you truly want to wipe out that DB each time
-    await connection.dropDatabase();  // <<-- Now on the instance, not the class
+    await connection.dropDatabase();
     await connection.close();
     await app.close();
   });
 
-  /********************************************************************************
-   * SIGNUP
-   ********************************************************************************/
-  it('POST /auth/signup - creates a new user', async () => {
+  // --- Signup Edge Cases ---
+  it('POST /auth/signup - fails when required fields are missing', async () => {
+    // Missing email
     const response = await request(httpServer)
-      .post('/auth/signup')
-      .send({
-        username: 'testuser',
-        email: 'testuser@example.com',
-        password: 'password123',
-      })
-      .expect(201);
-
-    expect(response.body).toHaveProperty('userId');
+      .post('/api/auth/signup')
+      .send({ username: 'user1', password: 'password123' })
+      .expect(400);
+    expect(response.body.message).toContain('email should not be empty');
   });
 
-  /********************************************************************************
-   * LOGIN (WRONG PASSWORD) - should fail
-   ********************************************************************************/
-  it('POST /auth/login - fails on incorrect password', async () => {
+  it('POST /auth/signup - fails when email is invalid', async () => {
     const response = await request(httpServer)
-      .post('/auth/login')
-      .send({ identifier: 'testuser', password: 'incorrectPassword' })
-      .expect(401);
+      .post('/api/auth/signup')
+      .send({ username: 'user1', email: 'invalid', password: 'password123' })
+      .expect(400);
+    expect(response.body.message).toContain('email must be an email');
+  });
 
+  it('POST /auth/signup - fails when password is too short', async () => {
+    const response = await request(httpServer)
+      .post('/api/auth/signup')
+      .send({ username: 'user1', email: 'user1@example.com', password: '123' })
+      .expect(400);
+    expect(response.body.message).toContain('password must be longer than or equal to 6 characters');
+  });
+
+  it('POST /auth/signup - fails when duplicate user exists', async () => {
+    // Create a user
+    await request(httpServer)
+      .post('/api/auth/signup')
+      .send({ username: 'dupuser', email: 'dup@example.com', password: 'password123' })
+      .expect(201);
+    // Try signing up with same username or email.
+    const response = await request(httpServer)
+      .post('/api/auth/signup')
+      .send({ username: 'dupuser', email: 'dup@example.com', password: 'password123' })
+      .expect(409);
+    expect(response.body.message).toContain('User already exists');
+  });
+
+  // --- Login Edge Cases ---
+  it('POST /auth/login - fails when required fields are missing', async () => {
+    const response = await request(httpServer)
+      .post('/api/auth/login')
+      .send({ password: 'password123' })
+      .expect(400);
+    expect(response.body.message).toContain('identifier should not be empty');
+  });
+
+  it('POST /auth/login - fails with incorrect credentials', async () => {
+    const response = await request(httpServer)
+      .post('/api/auth/login')
+      .send({ identifier: 'testuser', password: 'wrong' })
+      .expect(401);
     expect(response.body.message).toBe('Invalid credentials');
   });
 
-  /********************************************************************************
-   * LOGIN (CORRECT PASSWORD)
-   ********************************************************************************/
+  // --- Successful Login, Profile, Logout, Delete ---
   it('POST /auth/login - logs in successfully with correct password', async () => {
-    // Log out if there's any previous session
-    await request(httpServer).post('/auth/logout');
+    // Clear any existing session.
+    await request(httpServer).post('/api/auth/logout');
 
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ identifier: 'testuser', password: 'password123' })
       .expect(200);
-
     expect(response.body.message).toBe('Logged in successfully');
-
-    // Safely store the set-cookie header as an array of strings
     const setCookie = response.headers['set-cookie'];
-    if (typeof setCookie === 'string') {
-      cookieJar = [setCookie];
-    } else {
-      cookieJar = setCookie ?? [];
-    }
+    cookieJar = typeof setCookie === 'string' ? [setCookie] : setCookie ?? [];
   });
 
-  /********************************************************************************
-   * PROFILE (LOGGED IN)
-   ********************************************************************************/
   it('GET /auth/profile - returns user info when logged in', async () => {
     const response = await request(httpServer)
-      .get('/auth/profile')
+      .get('/api/auth/profile')
       .set('Cookie', cookieJar)
       .expect(200);
-
     expect(response.body).toMatchObject({
       message: 'Profile retrieved',
       userId: expect.any(String),
     });
   });
 
-  /********************************************************************************
-   * LOGOUT
-   ********************************************************************************/
   it('POST /auth/logout - logs out the user', async () => {
     const response = await request(httpServer)
-      .post('/auth/logout')
+      .post('/api/auth/logout')
       .set('Cookie', cookieJar)
       .expect(200);
-
     expect(response.body.message).toBe('Logged out successfully');
-
-    // clear our local copy of the cookie
     cookieJar = [];
   });
 
-  /********************************************************************************
-   * PROFILE (LOGGED OUT)
-   ********************************************************************************/
   it('GET /auth/profile - returns "Not logged in" after logout', async () => {
-    // We have no valid cookie now
     const response = await request(httpServer)
-      .get('/auth/profile')
+      .get('/api/auth/profile')
       .expect(200);
-
     expect(response.body.message).toBe('Not logged in');
   });
 
-  /********************************************************************************
-   * LOGIN AGAIN FOR DELETE
-   ********************************************************************************/
   it('POST /auth/login - logs in user again for deletion test', async () => {
     const response = await request(httpServer)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ identifier: 'testuser', password: 'password123' })
       .expect(200);
-
     expect(response.body.message).toBe('Logged in successfully');
-
     const setCookie = response.headers['set-cookie'];
-    if (typeof setCookie === 'string') {
-      cookieJar = [setCookie];
-    } else {
-      cookieJar = setCookie ?? [];
-    }
+    cookieJar = typeof setCookie === 'string' ? [setCookie] : setCookie ?? [];
   });
 
-  /********************************************************************************
-   * DELETE USER
-   ********************************************************************************/
   it('DELETE /auth/delete - deletes user successfully when logged in', async () => {
     const response = await request(httpServer)
-      .delete('/auth/delete')
+      .delete('/api/auth/delete')
       .set('Cookie', cookieJar)
       .send({ password: 'password123' })
       .expect(200);
-
     expect(response.body.message).toBe('User deleted successfully');
   });
 
-  /********************************************************************************
-   * PROFILE AFTER DELETION
-   ********************************************************************************/
   it('GET /auth/profile - not logged in after user is deleted', async () => {
-    // even if we pass old cookie, user is presumably gone
     const response = await request(httpServer)
-      .get('/auth/profile')
+      .get('/api/auth/profile')
       .set('Cookie', cookieJar)
       .expect(200);
-
     expect(response.body.message).toBe('Not logged in');
+  });
+});
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\test\chat.e2e-spec.ts ---
+/// <reference types="jest" />
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import request from 'supertest';
+import { ChatModule } from '../src/chat/chat.module';
+import { MongooseModule, getConnectionToken, getModelToken } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { User } from '../src/auth/interfaces/user.interface';
+
+describe('Chat E2E', () => {
+  let app: INestApplication;
+  let connection: Connection;
+  let userModel: Model<User>;
+  let channelModel: Model<any>;
+  let messageModel: Model<any>;
+
+  // Fixed ObjectIds for test users.
+  const userAId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+  const userBId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
+  const userCId = 'cccccccccccccccccccccccc'; // non-participant
+
+  let channelId: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        ChatModule,
+        // Use a dedicated test DB for chat tests.
+        MongooseModule.forRoot('mongodb://localhost:27017/campusconnect_chat_test'),
+      ],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    // Test authentication middleware.
+    app.use((req, res, next) => {
+      if (!req.session) {
+        req.session = {};
+      }
+      if (req.headers['x-user-id']) {
+        req.session.userId = req.headers['x-user-id'] as string;
+      }
+      next();
+    });
+    app.setGlobalPrefix('api');
+
+    await app.init();
+
+    connection = app.get(getConnectionToken());
+    userModel = moduleFixture.get(getModelToken('User'));
+    channelModel = moduleFixture.get(getModelToken('Channel'));
+    messageModel = moduleFixture.get(getModelToken('Message'));
+
+    // Clear the chat test DB and create test users.
+    await connection.dropDatabase();
+    await userModel.create([
+      { _id: userAId, username: 'userA', email: 'userA@example.com', password: 'hashed', friends: [] },
+      { _id: userBId, username: 'userB', email: 'userB@example.com', password: 'hashed', friends: [] },
+      { _id: userCId, username: 'userC', email: 'userC@example.com', password: 'hashed', friends: [] },
+    ]);
+  });
+
+  afterAll(async () => {
+    await connection.dropDatabase();
+    await app.close();
+  });
+
+  // --- Channel Creation Edge Cases ---
+  describe('Channel creation', () => {
+    it('should fail when a user creates a channel with themselves', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/channel')
+        .set('x-user-id', userAId)
+        .send({ recipientId: userAId })
+        .expect(400);
+      expect(res.body.message).toBe('Cannot create a channel with yourself');
+    });
+
+    it('should fail when recipient does not exist', async () => {
+      const nonExistentId = 'dddddddddddddddddddddddd';
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/channel')
+        .set('x-user-id', userAId)
+        .send({ recipientId: nonExistentId })
+        .expect(404);
+      expect(res.body.message).toBe('Recipient user not found.');
+    });
+
+    it('should create (or retrieve) a direct channel between userA and userB', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/channel')
+        .set('x-user-id', userAId)
+        .send({ recipientId: userBId })
+        .expect(201);
+      expect(res.body).toHaveProperty('_id');
+      expect(res.body.type).toBe('direct');
+      expect(res.body.participants).toEqual(expect.arrayContaining([userAId, userBId]));
+      channelId = res.body._id;
+    });
+  });
+
+  // --- Message Sending & Retrieval Edge Cases ---
+  describe('Message sending and retrieval', () => {
+    it('should fail when sending a message to a non-existent channel', async () => {
+      const nonExistentChannel = 'eeeeeeeeeeeeeeeeeeeeeeee';
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/message')
+        .set('x-user-id', userAId)
+        .send({ channelId: nonExistentChannel, content: 'Test' })
+        .expect(404);
+      expect(res.body.message).toBe('Channel not found');
+    });
+
+    it('should fail when sending an empty message', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/message')
+        .set('x-user-id', userAId)
+        .send({ channelId, content: '' })
+        .expect(400);
+      // Depending on your DTO/validation, adjust the error message.
+      expect(res.body.message).toContain('content should not be empty');
+    });
+
+    it('should allow userA to send a message in the channel', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/message')
+        .set('x-user-id', userAId)
+        .send({ channelId, content: 'Hello, userB!' })
+        .expect(201);
+      expect(res.body.message).toBe('Message sent.');
+      expect(res.body.data).toHaveProperty('_id');
+      expect(res.body.data.content).toBe('Hello, userB!');
+    });
+
+    it('should allow userB to send a message in the channel', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/message')
+        .set('x-user-id', userBId)
+        .send({ channelId, content: 'Hi, userA! How are you?' })
+        .expect(201);
+      expect(res.body.message).toBe('Message sent.');
+      expect(res.body.data).toHaveProperty('_id');
+      expect(res.body.data.content).toBe('Hi, userA! How are you?');
+    });
+
+    it('should forbid a non-participant (userC) from sending a message', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/chat/message')
+        .set('x-user-id', userCId)
+        .send({ channelId, content: 'I should not be allowed!' })
+        .expect(403);
+      expect(res.body.message).toBe('Not authorized to send messages in this channel');
+    });
+
+    it('should retrieve all messages in the channel sorted chronologically', async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/api/chat/channel/${channelId}/messages`)
+        .set('x-user-id', userAId)
+        .expect(200);
+      expect(res.body).toHaveProperty('messages');
+      expect(Array.isArray(res.body.messages)).toBe(true);
+      // Expect at least 2 messages from previous tests.
+      expect(res.body.messages.length).toBeGreaterThanOrEqual(2);
+      expect(res.body.messages[0].content).toBe('Hello, userB!');
+      expect(res.body.messages[1].content).toBe('Hi, userA! How are you?');
+    });
+  });
+
+  // --- Non-Authenticated Edge Cases ---
+  it('should return 401 when non-authenticated user attempts to create a channel', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/chat/channel')
+      .send({ recipientId: userBId })
+      .expect(401);
+    expect(res.body.message).toBe('Not authenticated');
+  });
+
+  it('should return 401 when non-authenticated user attempts to send a message', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/chat/message')
+      .send({ channelId, content: 'Test' })
+      .expect(401);
+    expect(res.body.message).toBe('Not authenticated');
+  });
+
+  it('should return 401 when non-authenticated user attempts to get messages', async () => {
+    const res = await request(app.getHttpServer())
+      .get(`/api/chat/channel/${channelId}/messages`)
+      .expect(401);
+    expect(res.body.message).toBe('Not authenticated');
+  });
+});
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\test\friends.e2e-spec.ts ---
+/// <reference types="jest" />
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import request from 'supertest';
+import { FriendsModule } from '../src/friends/friends.module';
+import { MongooseModule, getConnectionToken, getModelToken } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { FriendRequest } from '../src/friends/interfaces/friend-request.interface';
+import { User } from '../src/auth/interfaces/user.interface';
+
+describe('Friends E2E', () => {
+  let app: INestApplication;
+  let connection: Connection;
+  let userModel: Model<User>;
+  let friendRequestModel: Model<FriendRequest>;
+
+  const userAId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+  const userBId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        FriendsModule,
+        // Use a dedicated test DB for friends tests.
+        MongooseModule.forRoot('mongodb://localhost:27017/campusconnect_friends_test'),
+      ],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    // Test authentication middleware.
+    app.use((req, res, next) => {
+      if (!req.session) {
+        req.session = {};
+      }
+      if (req.headers['x-user-id']) {
+        req.session.userId = req.headers['x-user-id'] as string;
+      }
+      next();
+    });
+    app.setGlobalPrefix('api');
+
+    await app.init();
+
+    connection = app.get(getConnectionToken());
+    userModel = moduleFixture.get(getModelToken('User'));
+    friendRequestModel = moduleFixture.get(getModelToken('FriendRequest'));
+
+    await connection.dropDatabase();
+    await userModel.create([
+      {
+        _id: userAId,
+        username: 'userA',
+        email: 'userA@example.com',
+        password: 'hashed',
+        friends: [],
+      },
+      {
+        _id: userBId,
+        username: 'userB',
+        email: 'userB@example.com',
+        password: 'hashed',
+        friends: [],
+      },
+    ]);
+  });
+
+  afterAll(async () => {
+    await connection.dropDatabase();
+    await app.close();
+  });
+
+  // --- Friend Request Edge Cases ---
+  it('should fail when sending a friend request to self', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/request')
+      .set('x-user-id', userAId)
+      .send({ recipient: userAId })
+      .expect(400);
+    expect(res.body.message).toBe('You cannot send a friend request to yourself.');
+  });
+
+  it('userA should send a friend request to userB', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/request')
+      .set('x-user-id', userAId)
+      .send({ recipient: userBId })
+      .expect(201);
+    expect(res.body).toEqual({ message: 'Friend request sent successfully.' });
+    const fr = await friendRequestModel.findOne({ requester: userAId, recipient: userBId });
+    expect(fr).toBeDefined();
+  });
+
+  it('should fail when sending a duplicate friend request', async () => {
+    // Attempt to send a second request.
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/request')
+      .set('x-user-id', userAId)
+      .send({ recipient: userBId })
+      .expect(400);
+    expect(res.body.message).toBe('Friend request already sent.');
+  });
+
+  // --- Friend Request Viewing and Processing ---
+  it('userB should see the friend request', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/api/friends/requests')
+      .set('x-user-id', userBId)
+      .expect(200);
+    expect(res.body.friendRequests).toHaveLength(1);
+    expect(res.body.friendRequests[0]).toHaveProperty('requester');
+    expect(res.body.friendRequests[0].requester).toHaveProperty('username', 'userA');
+  });
+
+  it('should fail if a user tries to accept a request not addressed to them', async () => {
+    // Create an extra user D for this test.
+    const extraUserId = 'dddddddddddddddddddddddd';
+    await userModel.create({
+      _id: extraUserId,
+      username: 'userD',
+      email: 'userD@example.com',
+      password: 'hashed',
+      friends: [],
+    });
+    // userD attempts to accept userA->userB request.
+    const fr = await friendRequestModel.findOne({ requester: userAId, recipient: userBId });
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/accept')
+      .set('x-user-id', extraUserId)
+      .send({ requestId: (fr as any)._id.toString() })
+      .expect(403);
+    expect(res.body.message).toBe('You are not authorized to accept this friend request.');
+  });
+
+  it('userB should accept the friend request', async () => {
+    const fr = await friendRequestModel.findOne({ requester: userAId, recipient: userBId });
+    if (!fr) throw new Error('Friend request not found');
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/accept')
+      .set('x-user-id', userBId)
+      .send({ requestId: (fr as any)._id.toString() })
+      .expect(201);
+    expect(res.body).toEqual({ message: 'Friend request accepted.' });
+    const frAfter = await friendRequestModel.findOne({ requester: userAId, recipient: userBId });
+    expect(frAfter).toBeNull();
+
+    const userA = await userModel.findById(userAId);
+    const userB = await userModel.findById(userBId);
+    expect(userA?.friends?.map(String) ?? []).toContain(userBId);
+    expect(userB?.friends?.map(String) ?? []).toContain(userAId);
+  });
+
+  it('should fail to revoke a friend request not initiated by the user', async () => {
+    // Create a friend request from userA to userB again (simulate a duplicate scenario)
+    const newFR = new friendRequestModel({ requester: userAId, recipient: userBId });
+    await newFR.save();
+    // userB attempts to revoke it.
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/revoke')
+      .set('x-user-id', userBId)
+      .send({ requestId: (newFR as any)._id.toString() })
+      .expect(403);
+    expect(res.body.message).toBe('You are not authorized to revoke this friend request.');
+  });
+
+  it('userA should revoke their friend request successfully', async () => {
+    const fr = await friendRequestModel.findOne({ requester: userAId, recipient: userBId });
+    if (!fr) throw new Error('Friend request not found for revocation');
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/revoke')
+      .set('x-user-id', userAId)
+      .send({ requestId: (fr as any)._id.toString() })
+      .expect(200);
+    expect(res.body.message).toBe('Friend request revoked.');
+  });
+
+  it('userA should remove userB from the friend list', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/friends/remove')
+      .set('x-user-id', userAId)
+      .send({ friendId: userBId })
+      .expect(201);
+    expect(res.body).toEqual({ message: 'Friend removed successfully.' });
+    const userA = await userModel.findById(userAId);
+    const userB = await userModel.findById(userBId);
+    expect(userA?.friends?.map(String) ?? []).not.toContain(userBId);
+    expect(userB?.friends?.map(String) ?? []).not.toContain(userAId);
   });
 });
 
@@ -1600,35 +2752,467 @@ spec:
   type: ClusterIP
 
 
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\test.yaml ---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: inter-container-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: curl-test
+        image: curlimages/curl:8.1.2
+        command:
+          - sh
+          - -c
+          - >
+            http_code=$(curl -s -o /dev/null -w "%{http_code}" http://myapp-nginx/api/auth/profile);
+            echo "Received HTTP code: $http_code";
+            if [ "$http_code" -eq 200 ]; then
+              echo "Inter-container connectivity test passed.";
+            else
+              echo "Inter-container connectivity test failed with code $http_code.";
+              exit 1;
+            fi
+      restartPolicy: Never
+  backoffLimit: 3
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\.gitignore ---
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\Dockerfile ---
+FROM node:18-alpine
+WORKDIR /app
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm ci --silent
+# Copy all source code and build the app
+COPY . .
+RUN npm run build
+# Install a lightweight static file server (like "serve")
+RUN npm install -g serve
+EXPOSE 5000
+# Serve the built app on port 5000
+CMD ["serve", "-s", "build", "-l", "5000"]
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\package.json ---
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\README.md ---
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\favicon.ico ---
+Error reading file: 'utf-8' codec can't decode byte 0xe3 in position 14: invalid continuation byte
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\index.html ---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\logo192.png ---
+Error reading file: 'utf-8' codec can't decode byte 0x89 in position 0: invalid start byte
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\logo512.png ---
+Error reading file: 'utf-8' codec can't decode byte 0x89 in position 0: invalid start byte
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\manifest.json ---
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\public\robots.txt ---
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.css ---
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.js ---
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\App.test.js ---
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\index.css ---
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\index.js ---
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\logo.svg ---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\reportWebVitals.js ---
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\frontend\src\setupTests.js ---
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+
 --- C:\Users\Tyler\workspace\CampusConnect1\nginx\Dockerfile ---
+# Stage 1: Build the React app
+FROM node:18-alpine AS builder
+WORKDIR /app
+# Copy package files from the frontend folder
+COPY frontend/package*.json ./
+RUN npm ci --silent
+# Copy the entire frontend source
+COPY frontend .
+# Build the React application (output goes to /app/build)
+RUN npm run build
+
+# Stage 2: Create the production image using Nginx
 FROM nginx:alpine
-
-# Remove the default configuration file
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copy your custom configuration (ensure the file name matches exactly)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+# Remove the default configuration
+RUN rm -f /etc/nginx/conf.d/default.conf
+# Copy your custom Nginx configuration (from nginx/nginx.conf)
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the built static assets from the builder stage into Nginx’s web directory
+COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
-
-# Clear the default entrypoint inherited from the base image
-ENTRYPOINT []
-
-# Use the nginx binary from PATH to run Nginx
 CMD ["nginx", "-g", "daemon off;"]
 
 
 --- C:\Users\Tyler\workspace\CampusConnect1\nginx\nginx.conf ---
 server {
-    listen 80 default_server;
-    server_name _;
+  listen 80;
+  server_name localhost;
 
-    location / {
-        proxy_pass http://myapp-backend:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
+  # Serve static files (React app)
+  location / {
+    root /usr/share/nginx/html;
+    try_files $uri /index.html;
+  }
+
+  # Proxy backend API requests
+  location /api/ {
+    proxy_pass http://myapp-backend:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
 }
 
 

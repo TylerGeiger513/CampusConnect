@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: inter-container-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: curl-test
+        image: curlimages/curl:8.1.2
+        command:
+          - sh
+          - -c
+          - >
+            http_code=$(curl -s -o /dev/null -w "%{http_code}" http://myapp-nginx/api/auth/profile);
+            echo "Received HTTP code: $http_code";
+            if [ "$http_code" -eq 200 ]; then
+              echo "Inter-container connectivity test passed.";
+            else
+              echo "Inter-container connectivity test failed with code $http_code.";
+              exit 1;
+            fi
+      restartPolicy: Never
+  backoffLimit: 3

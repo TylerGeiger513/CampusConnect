@@ -19,19 +19,22 @@ export class FriendsService {
   /**
    * Sends a friend request from the requester to the recipient.
    * @param requesterId - The ID of the user sending the request.
-   * @param dto - DTO containing recipient identifier (username or user ID).
+   * @param dto - DTO containing recipient identifier (username, email, or user ID).
    */
   async sendFriendRequest(
     requesterId: string,
     dto: SendFriendRequestDto,
   ): Promise<{ message: string }> {
-    // Determine recipient by ID or username
     let recipientUser;
     const recipientIdentifier = dto.recipient;
+    // If the identifier is a valid ObjectId, search by _id.
     if (recipientIdentifier.match(/^[0-9a-fA-F]{24}$/)) {
       recipientUser = await this.userModel.findById(recipientIdentifier);
     } else {
-      recipientUser = await this.userModel.findOne({ username: recipientIdentifier });
+      // Otherwise, search by username or email.
+      recipientUser = await this.userModel.findOne({
+        $or: [{ username: recipientIdentifier }, { email: recipientIdentifier }],
+      });
     }
     if (!recipientUser) {
       throw new HttpException('Recipient user not found.', HttpStatus.NOT_FOUND);
@@ -40,7 +43,7 @@ export class FriendsService {
       throw new HttpException('You cannot send a friend request to yourself.', HttpStatus.BAD_REQUEST);
     }
 
-    // Check if a friend request already exists
+    // Check if a friend request already exists.
     const existingRequest = await this.friendRequestModel.findOne({
       requester: requesterId,
       recipient: recipientUser._id,
@@ -49,7 +52,7 @@ export class FriendsService {
       throw new HttpException('Friend request already sent.', HttpStatus.BAD_REQUEST);
     }
 
-    // Check if the users are already friends
+    // Check if the users are already friends.
     const requester = await this.userModel.findById(requesterId);
     if (requester && requester.friends && requester.friends.includes(recipientUser._id)) {
       throw new HttpException('User is already your friend.', HttpStatus.BAD_REQUEST);
@@ -61,7 +64,7 @@ export class FriendsService {
     });
     await friendRequest.save();
 
-    // Emit a WebSocket event to notify the recipient
+    // Emit a WebSocket event to notify the recipient.
     this.friendsGateway.notifyFriendRequest(recipientUser._id.toString(), {
       requestId: friendRequest._id,
       from: requesterId,
