@@ -55,7 +55,6 @@ k8s_node.addService(rspec.Execute(
     sudo chmod +x /usr/local/bin/myapp
     """
 
-    """
 ))
 
 # Output the RSpec 
