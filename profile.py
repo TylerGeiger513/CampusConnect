@@ -12,6 +12,7 @@ k8s_node.hardware_type = "m400"
 k8s_node.addService(rspec.Execute(
     shell="bash",
     command="""
+    # Update package list
     sudo apt update &&
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common &&
     
@@ -20,20 +21,19 @@ k8s_node.addService(rspec.Execute(
 
     # Add user to Docker group to avoid permission errors
     sudo usermod -aG docker $(whoami) &&
+    echo 'newgrp docker' >> ~/.bashrc  # Apply group change after login
 
-    # Install latest kubectl
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl.sha256"
-    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    # Install latest kubectl (Fix: Use sudo and correct path)
+    sudo curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" &&
+    sudo chmod +x /usr/local/bin/kubectl
 
-    # Install latest Minikube
-    curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64
-    sudo install minikube-linux-arm64 /usr/local/bin/minikube && rm minikube-linux-arm64
+    # Install latest Minikube (Fix: Use sudo and correct path)
+    sudo curl -Lo /usr/local/bin/minikube "https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64" &&
+    sudo chmod +x /usr/local/bin/minikube
 
-    # Start Minikube with latest Kubernetes
+    # Start Minikube (Fix: Use correct permissions)
     sudo minikube start --driver=docker
-    
+
     # Verify installation
     docker --version &&
     kubectl version --client &&
@@ -54,9 +54,7 @@ k8s_node.addService(rspec.Execute(
 
     sudo chmod +x /usr/local/bin/myapp
     """
-
 ))
 
-# Output the RSpec 
+# Output the RSpec
 portal.context.printRequestRSpec()
-
