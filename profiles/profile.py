@@ -7,7 +7,7 @@ request = portal.context.makeRequestRSpec()
 # Define the primary node for Kubernetes and Docker
 k8s_node = request.RawPC("k8s-master")
 k8s_node.hardware_type = "m400"
-k8s_node.disk_image = "urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"
+k8s_node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD"
 
 # Install Docker, Minikube, and kubectl
 k8s_node.addService(rspec.Execute(
