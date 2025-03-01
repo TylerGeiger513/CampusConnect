@@ -78,13 +78,12 @@ async function bootstrap() {
       },
     }),
   );
-
   // Start the NestJS server
   const port = configService.get<number>('PORT') || 5000;
   await app.listen(port);
   logger.log(`Backend is running on port ${port}`);
 
-  app.setGlobalPrefix('api');
+  
 }
 
 bootstrap();
