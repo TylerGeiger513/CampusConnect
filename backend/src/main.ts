@@ -72,8 +72,9 @@ async function bootstrap() {
           10,
         ),
         httpOnly: true,
+        //validate that cookie same site is lax | strict | none
         secure: configService.get<string>('COOKIE_SECURE') === 'true',
-        sameSite: configService.get<string>('COOKIE_SAME_SITE') || 'Lax',
+        sameSite: configService.get<string>('COOKIE_SAME_SITE') as 'lax' | 'strict' | 'none' || 'lax',
       },
     }),
   );

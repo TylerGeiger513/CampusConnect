@@ -15,33 +15,49 @@ k8s_node.addService(rspec.Execute(
     sudo apt update &&
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common &&
     
-    # Install latest Docker
-    sudo mkdir -m 0755 -p /etc/apt/keyrings &&
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc &&
-    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null &&
-    sudo apt update &&
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &&
+    # Install Docker (Ubuntu package)
+    sudo apt install -y docker.io &&
 
     # Add user to Docker group to avoid permission errors
     sudo usermod -aG docker $(whoami) &&
 
     # Install latest kubectl
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" &&
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl &&
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl.sha256"
+    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     # Install latest Minikube
-    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 &&
-    sudo install minikube-linux-amd64 /usr/local/bin/minikube &&
+    curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64
+    sudo install minikube-linux-arm64 /usr/local/bin/minikube && rm minikube-linux-arm64
 
     # Start Minikube with latest Kubernetes
-    sudo minikube start --driver=none &&
+    sudo minikube start --driver=docker
     
     # Verify installation
     docker --version &&
     kubectl version --client &&
     minikube version
+
+    # Add status message on SSH login
+    echo 'echo "==== MyApp Status ===="; kubectl get nodes; kubectl get pods -A' >> ~/.bashrc
+
+    # Create a "myapp" status command
+    echo '#!/bin/bash' | sudo tee /usr/local/bin/myapp > /dev/null
+    echo 'echo "==== MyApp Status ===="' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get nodes' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get pods -A' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get services' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'NODE_PORT=$(kubectl get svc myapp-nginx -o=jsonpath="{.spec.ports[0].nodePort}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'NODE_IP=$(kubectl get nodes -o=jsonpath="{.items[0].status.addresses[0].address}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'echo "MyApp is accessible at: http://$NODE_IP:$NODE_PORT"' | sudo tee -a /usr/local/bin/myapp > /dev/null
+
+    sudo chmod +x /usr/local/bin/myapp
+    """
+
     """
 ))
 
-# Output the RSpec
+# Output the RSpec 
 portal.context.printRequestRSpec()
+
