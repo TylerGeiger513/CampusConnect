@@ -1,6 +1,7 @@
 Files being processed:
 C:\Users\Tyler\workspace\CampusConnect1\.dockerignore
 C:\Users\Tyler\workspace\CampusConnect1\log.py
+C:\Users\Tyler\workspace\CampusConnect1\profile.py
 C:\Users\Tyler\workspace\CampusConnect1\setup.py
 C:\Users\Tyler\workspace\CampusConnect1\backend\.env.prod
 C:\Users\Tyler\workspace\CampusConnect1\backend\.gitignore
@@ -24,6 +25,8 @@ C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\filters\http-exceptio
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\interceptors\logging.interceptor.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\config\config.module.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\database\database.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friends.dto.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.service.ts
 C:\Users\Tyler\workspace\CampusConnect1\backend\src\types\express-session.ts
@@ -101,6 +104,69 @@ if __name__ == "__main__":
     main()
 
 
+--- C:\Users\Tyler\workspace\CampusConnect1\profile.py ---
+import geni.portal as portal
+import geni.rspec.pg as rspec
+
+# Create a request object to define the profile
+request = portal.context.makeRequestRSpec()
+
+# Define the primary node for Kubernetes and Docker
+k8s_node = request.RawPC("k8s-master")
+k8s_node.hardware_type = "m400"
+
+# Install the latest versions of Docker, Minikube, and kubectl
+k8s_node.addService(rspec.Execute(
+    shell="bash",
+    command="""
+    # Update package list
+    sudo apt update &&
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common &&
+    
+    # Install Docker (Ubuntu package)
+    sudo apt install -y docker.io &&
+
+    # Add user to Docker group to avoid permission errors
+    sudo usermod -aG docker $(whoami) &&
+    echo 'newgrp docker' >> ~/.bashrc  # Apply group change after login
+
+    # Install latest kubectl (Fix: Use sudo and correct path)
+    sudo curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" &&
+    sudo chmod +x /usr/local/bin/kubectl
+
+    # Install latest Minikube (Fix: Use sudo and correct path)
+    sudo curl -Lo /usr/local/bin/minikube "https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64" &&
+    sudo chmod +x /usr/local/bin/minikube
+
+    # Start Minikube (Fix: Use correct permissions)
+    sudo minikube start --driver=docker
+
+    # Verify installation
+    docker --version &&
+    kubectl version --client &&
+    minikube version
+
+    # Add status message on SSH login
+    echo 'echo "==== MyApp Status ===="; kubectl get nodes; kubectl get pods -A' >> ~/.bashrc
+
+    # Create a "myapp" status command
+    echo '#!/bin/bash' | sudo tee /usr/local/bin/myapp > /dev/null
+    echo 'echo "==== MyApp Status ===="' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get nodes' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get pods -A' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'kubectl get services' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'NODE_PORT=$(kubectl get svc myapp-nginx -o=jsonpath="{.spec.ports[0].nodePort}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'NODE_IP=$(kubectl get nodes -o=jsonpath="{.items[0].status.addresses[0].address}")' | sudo tee -a /usr/local/bin/myapp > /dev/null
+    echo 'echo "MyApp is accessible at: http://$NODE_IP:$NODE_PORT"' | sudo tee -a /usr/local/bin/myapp > /dev/null
+
+    sudo chmod +x /usr/local/bin/myapp
+    """
+))
+
+# Output the RSpec
+portal.context.printRequestRSpec()
+
+
 --- C:\Users\Tyler\workspace\CampusConnect1\setup.py ---
 import os
 import sys
@@ -116,16 +182,16 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-def run_command(command, error_message, exit_on_fail=True):
-    """Run a command and optionally exit if it fails, logging an error message."""
+def run_command(command, error_message, exit_on_fail=True, cwd=None):
     try:
-        logging.info("Running: " + " ".join(command))
-        subprocess.check_call(command)
+        logging.info("Running: " + " ".join(command) + (f" in {cwd}" if cwd else ""))
+        subprocess.check_call(command, cwd=cwd)
     except subprocess.CalledProcessError as e:
         logging.error(f"{error_message}\nCommand: {' '.join(command)}\nError: {e}")
         if exit_on_fail:
             log_error_pods("app=myapp-backend")
             sys.exit(1)
+
 
 def log_error_pods(label: str):
     """Retrieve pods by label and log their logs if they are in an error state."""
@@ -278,10 +344,9 @@ class TestCommand(Command):
         logging.info("Running tests...")
         project_root = os.getcwd()
         backend_path = os.path.join(project_root, "backend")
-        run_command(
-            ["npm", "run", "test"],
-            "Tests failed. Aborting deployment."
-        )
+        run_command(["npm.cmd", "run", "test:e2e"],
+                    "Tests failed. Aborting deployment.",
+                    cwd=backend_path)
         logging.info("All tests passed.")
 
 class PauseCommand(Command):
@@ -438,7 +503,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\Dockerfile ---
 # Stage 1: Build the application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -731,16 +796,18 @@ async function bootstrap() {
           10,
         ),
         httpOnly: true,
+        //validate that cookie same site is lax | strict | none
         secure: configService.get<string>('COOKIE_SECURE') === 'true',
-        sameSite: configService.get<string>('COOKIE_SAME_SITE') || 'Lax',
+        sameSite: configService.get<string>('COOKIE_SAME_SITE') as 'lax' | 'strict' | 'none' || 'lax',
       },
     }),
   );
-
   // Start the NestJS server
   const port = configService.get<number>('PORT') || 5000;
   await app.listen(port);
   logger.log(`Backend is running on port ${port}`);
+
+  
 }
 
 bootstrap();
@@ -783,6 +850,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request) {
     return new Promise((resolve, reject) => {
       req.session.destroy((err) => {
@@ -1029,6 +1097,12 @@ import { ConfigService } from '@nestjs/config';
 export class DatabaseModule {}
 
 
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\friends.module.ts ---
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\friends\dto\friends.dto.ts ---
+const { isEmpty, isString } = require('class-validator');
+
 --- C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts ---
 import { Module, Global } from '@nestjs/common';
 import { RedisService } from './redis.service';
@@ -1173,9 +1247,16 @@ describe('AuthController (e2e)', () => {
     await app.init();
     httpServer = app.getHttpServer();
 
+
     // Retrieve the NestJS-managed connection so we can drop the DB later
     const connectionToken = getConnectionToken(); // typically 'DatabaseConnection'
     connection = moduleFixture.get<Connection>(connectionToken);
+
+    // Drop the entire test database so it's fresh for this run
+    await connection
+      .useDb('campusconnect_test')
+      .dropDatabase();
+
   });
 
   afterAll(async () => {

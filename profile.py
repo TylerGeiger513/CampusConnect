@@ -8,6 +8,7 @@ request = portal.context.makeRequestRSpec()
 k8s_node = request.RawPC("k8s-master")
 k8s_node.hardware_type = "m400"
 
+
 # Install the latest versions of Docker, Minikube, and kubectl
 k8s_node.addService(rspec.Execute(
     shell="bash",
@@ -25,11 +26,9 @@ k8s_node.addService(rspec.Execute(
 
     # Install latest kubectl (Fix: Use sudo and correct path)
     sudo curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" &&
-    sudo chmod +x /usr/local/bin/kubectl
 
     # Install latest Minikube (Fix: Use sudo and correct path)
     sudo curl -Lo /usr/local/bin/minikube "https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64" &&
-    sudo chmod +x /usr/local/bin/minikube
 
     # Start Minikube (Fix: Use correct permissions)
     sudo minikube start --driver=docker
