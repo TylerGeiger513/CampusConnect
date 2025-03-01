@@ -11,14 +11,22 @@ spec:
         command:
           - sh
           - -c
-          - >
-            http_code=$(curl -s -o /dev/null -w "%{http_code}" http://myapp-nginx/api/auth/profile);
-            echo "Received HTTP code: $http_code";
-            if [ "$http_code" -eq 200 ]; then
-              echo "Inter-container connectivity test passed.";
-            else
-              echo "Inter-container connectivity test failed with code $http_code.";
-              exit 1;
-            fi
+          - |
+            max_attempts=12
+            attempt=1
+            while [ $attempt -le $max_attempts ]; do
+              echo "Attempt $attempt: Checking connectivity to myapp-nginx/api/auth/profile"
+              http_code=$(curl -s -o /dev/null -w "%{http_code}" http://myapp-nginx/api/auth/profile)
+              if [ "$http_code" -eq 200 ]; then
+                echo "Connectivity test passed on attempt $attempt."
+                exit 0
+              else
+                echo "Received HTTP code: $http_code. Retrying in 5 seconds..."
+                sleep 5
+              fi
+              attempt=$((attempt+1))
+            done
+            echo "Connectivity test failed after $max_attempts attempts."
+            exit 1
       restartPolicy: Never
   backoffLimit: 3
