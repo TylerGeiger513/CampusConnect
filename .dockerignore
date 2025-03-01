@@ -1,8 +1,2 @@
-/backend/node_modules
-/frontend/node_modules
-*.md 
-*.git
-*.gitignore
-README*
-/resumes
-/resumes/*
+node_modules
+**/node_modules

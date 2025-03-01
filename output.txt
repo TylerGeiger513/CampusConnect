@@ -1,0 +1,1553 @@
+Files being processed:
+C:\Users\Tyler\workspace\CampusConnect1\.dockerignore
+C:\Users\Tyler\workspace\CampusConnect1\log.py
+C:\Users\Tyler\workspace\CampusConnect1\setup.py
+C:\Users\Tyler\workspace\CampusConnect1\backend\.env.prod
+C:\Users\Tyler\workspace\CampusConnect1\backend\.gitignore
+C:\Users\Tyler\workspace\CampusConnect1\backend\.prettierrc
+C:\Users\Tyler\workspace\CampusConnect1\backend\Dockerfile
+C:\Users\Tyler\workspace\CampusConnect1\backend\eslint.config.mjs
+C:\Users\Tyler\workspace\CampusConnect1\backend\nest-cli.json
+C:\Users\Tyler\workspace\CampusConnect1\backend\package.json
+C:\Users\Tyler\workspace\CampusConnect1\backend\tsconfig.build.json
+C:\Users\Tyler\workspace\CampusConnect1\backend\tsconfig.json
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\app.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\main.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.controller.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.service.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\login.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\signup.dto.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\interfaces\user.interface.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\schemas\user.schema.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\filters\http-exception.filter.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\interceptors\logging.interceptor.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\config\config.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\database\database.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.service.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\src\types\express-session.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\test\app.e2e-spec.ts
+C:\Users\Tyler\workspace\CampusConnect1\backend\test\jest-e2e.json
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-deployment.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-service.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\configmap.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\mongo-deployment.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\mongo-service.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-deployment.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-service.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-deployment.yaml
+C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-service.yaml
+C:\Users\Tyler\workspace\CampusConnect1\nginx\Dockerfile
+C:\Users\Tyler\workspace\CampusConnect1\nginx\nginx.conf
+
+================================================================================
+
+--- C:\Users\Tyler\workspace\CampusConnect1\.dockerignore ---
+node_modules
+**/node_modules
+
+--- C:\Users\Tyler\workspace\CampusConnect1\log.py ---
+import os
+
+# Directories and files to exclude
+EXCLUDE_DIRS = {"node_modules", ".git"}
+EXCLUDE_FILES = {"package-lock.json"}
+
+def process_file(file_path, output_file):
+    """Read the contents of file_path and write them to output_file, prefixed with a header."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        output_file.write(f"--- {file_path} ---\n")
+        output_file.write(content)
+        output_file.write("\n\n")
+    except Exception as e:
+        output_file.write(f"--- {file_path} ---\n")
+        output_file.write(f"Error reading file: {e}\n\n")
+
+def main():
+    root_dir = os.getcwd()  # assumes you're running log.py from the project root
+    output_path = os.path.join(root_dir, "output.txt")
+
+    # First, scan for all files that will be processed.
+    files_to_process = []
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        # Exclude directories we don't want to traverse
+        dirnames[:] = [d for d in dirnames if d not in EXCLUDE_DIRS]
+        for filename in filenames:
+            if filename in EXCLUDE_FILES:
+                continue
+            file_path = os.path.join(dirpath, filename)
+            # Avoid processing the output file itself
+            if os.path.abspath(file_path) == os.path.abspath(output_path):
+                continue
+            files_to_process.append(file_path)
+
+    with open(output_path, 'w', encoding='utf-8') as output_file:
+        # Write a header list of all files at the top
+        output_file.write("Files being processed:\n")
+        for file_path in files_to_process:
+            output_file.write(file_path + "\n")
+        output_file.write("\n" + "="*80 + "\n\n")
+
+        # Process each file
+        for file_path in files_to_process:
+            process_file(file_path, output_file)
+    
+    print(f"All files (except excluded) have been concatenated into {output_path}")
+
+if __name__ == "__main__":
+    main()
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\setup.py ---
+import os
+import sys
+import json
+import logging
+import subprocess
+from setuptools import setup, find_packages, Command
+
+# Configure logging to include timestamps and log levels
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+
+def run_command(command, error_message, exit_on_fail=True):
+    """Run a command and optionally exit if it fails, logging an error message."""
+    try:
+        logging.info("Running: " + " ".join(command))
+        subprocess.check_call(command)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"{error_message}\nCommand: {' '.join(command)}\nError: {e}")
+        if exit_on_fail:
+            log_error_pods("app=myapp-backend")
+            sys.exit(1)
+
+def log_error_pods(label: str):
+    """Retrieve pods by label and log their logs if they are in an error state."""
+    try:
+        pods_output = subprocess.check_output(
+            ["kubectl", "get", "pods", "-l", label, "-o", "json"], text=True
+        )
+        pods = json.loads(pods_output)
+        for pod in pods.get("items", []):
+            pod_name = pod["metadata"]["name"]
+            # Check if pod is not ready
+            conditions = pod["status"].get("conditions", [])
+            ready = any(c.get("type") == "Ready" and c.get("status") == "True" for c in conditions)
+            if not ready:
+                logging.error(f"Pod {pod_name} is not ready. Retrieving logs:")
+                try:
+                    logs = subprocess.check_output(["kubectl", "logs", pod_name], text=True)
+                    logging.error(f"Logs for {pod_name}:\n{logs}")
+                except subprocess.CalledProcessError as log_err:
+                    logging.error(f"Failed to get logs for {pod_name}: {log_err}")
+    except Exception as ex:
+        logging.error("Failed to log error pods: " + str(ex))
+
+def build_docker_images():
+    logging.info("Building Docker images...")
+    project_root = os.getcwd()
+    backend_path = os.path.join(project_root, "backend")
+    nginx_path = os.path.join(project_root, "nginx")
+    run_command(
+        ["docker", "build", "--no-cache", "-t", "myapp-backend:latest", backend_path],
+        "Failed to build backend image."
+    )
+    run_command(
+        ["docker", "build", "--no-cache", "-t", "myapp-nginx:latest", nginx_path],
+        "Failed to build nginx image."
+    )
+    logging.info("Docker images built successfully.")
+
+def deploy_kubernetes():
+    logging.info("Deploying to Kubernetes...")
+    project_root = os.getcwd()
+    k8s_dir = os.path.join(project_root, "deploy", "k8s")
+    configmap_yaml = os.path.join(k8s_dir, "configmap.yaml")
+    try:
+        run_command(["kubectl", "apply", "-f", configmap_yaml],
+                    "Failed to apply ConfigMap.")
+    except SystemExit:
+        logging.warning("ConfigMap not applied or already exists; continuing...")
+    run_command(["kubectl", "apply", "-f", k8s_dir],
+                "Failed to apply Kubernetes manifests.")
+    run_command(["kubectl", "rollout", "status", "deployment/myapp-backend"],
+                "Backend deployment rollout failed.")
+    run_command(["kubectl", "rollout", "status", "deployment/myapp-nginx"],
+                "Nginx deployment rollout failed.")
+    logging.info("Kubernetes deployment successful.")
+
+def print_service_info():
+    logging.info("Retrieving Nginx service information...")
+    try:
+        output = subprocess.check_output(
+            ["kubectl", "get", "service", "myapp-nginx", "-o", "json"], text=True
+        )
+        svc = json.loads(output)
+        node_port = svc["spec"]["ports"][0]["nodePort"]
+        node_ip = get_node_ip()
+        if node_ip:
+            logging.info(f"Nginx is accessible at http://{node_ip}:{node_port}")
+        else:
+            logging.error("Could not determine Node IP. Please check your Kubernetes cluster configuration.")
+    except Exception as e:
+        logging.error("Error retrieving service info: " + str(e))
+
+def get_node_ip():
+    logging.info("Retrieving node IP...")
+    try:
+        output = subprocess.check_output(["kubectl", "get", "nodes", "-o", "json"], text=True)
+        nodes = json.loads(output)["items"]
+        for node in nodes:
+            for addr in node.get("status", {}).get("addresses", []):
+                if addr["type"] == "ExternalIP":
+                    logging.info(f"Found ExternalIP: {addr['address']}")
+                    return addr["address"]
+        for node in nodes:
+            for addr in node.get("status", {}).get("addresses", []):
+                if addr["type"] == "InternalIP":
+                    logging.info(f"Falling back to InternalIP: {addr['address']}")
+                    return addr["address"]
+    except Exception as e:
+        logging.error("Error retrieving node IP: " + str(e))
+    return None
+
+def clear_kubernetes_resources():
+    logging.info("Clearing Kubernetes resources...")
+    project_root = os.getcwd()
+    k8s_dir = os.path.join(project_root, "deploy", "k8s")
+    run_command(["kubectl", "delete", "-f", k8s_dir],
+                "Failed to delete Kubernetes resources.", exit_on_fail=False)
+    logging.info("Kubernetes resources cleared.")
+
+def remove_docker_images():
+    logging.info("Removing local Docker images...")
+    for image in ["myapp-backend:latest", "myapp-nginx:latest"]:
+        run_command(["docker", "rmi", "-f", image],
+                    f"Failed to remove Docker image {image}.", exit_on_fail=False)
+    logging.info("Local Docker images removed.")
+
+class DeployCommand(Command):
+    description = "Build Docker images, deploy Kubernetes resources, and print service information."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        build_docker_images()
+        deploy_kubernetes()
+        print_service_info()
+
+class ResetCommand(Command):
+    description = "Clear Kubernetes resources and local Docker images, then rebuild and redeploy everything."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        clear_kubernetes_resources()
+        remove_docker_images()
+        build_docker_images()
+        deploy_kubernetes()
+        print_service_info()
+
+class TestCommand(Command):
+    description = "Run tests and ensure they pass before starting deployment."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        logging.info("Running tests...")
+        project_root = os.getcwd()
+        backend_path = os.path.join(project_root, "backend")
+        run_command(
+            ["npm", "run", "test"],
+            "Tests failed. Aborting deployment."
+        )
+        logging.info("All tests passed.")
+
+class PauseCommand(Command):
+    description = "Pause the deployments by scaling replicas to 0."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        logging.info("Pausing deployments...")
+        run_command(["kubectl", "scale", "deployment/myapp-backend", "--replicas=0"],
+                    "Failed to pause backend deployment.")
+        run_command(["kubectl", "scale", "deployment/myapp-nginx", "--replicas=0"],
+                    "Failed to pause nginx deployment.")
+        logging.info("Deployments paused.")
+
+class ResumeCommand(Command):
+    description = "Resume the deployments by scaling replicas back to 1."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        logging.info("Resuming deployments...")
+        run_command(["kubectl", "scale", "deployment/myapp-backend", "--replicas=1"],
+                    "Failed to resume backend deployment.")
+        run_command(["kubectl", "scale", "deployment/myapp-nginx", "--replicas=1"],
+                    "Failed to resume nginx deployment.")
+        logging.info("Deployments resumed.")
+
+class ShutdownCommand(Command):
+    description = "Shutdown the application by clearing all Kubernetes resources and local Docker images."
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        logging.info("Shutting down application...")
+        clear_kubernetes_resources()
+        remove_docker_images()
+        logging.info("Application shutdown complete.")
+
+def main():
+    build_docker_images()
+    deploy_kubernetes()
+    print_service_info()
+
+setup(
+    name="campusconnect1-deployment",
+    version="0.1.0",
+    packages=find_packages(),
+    cmdclass={
+        'deploy': DeployCommand,
+        'reset': ResetCommand,
+        'testdeploy': TestCommand,
+        'pause': PauseCommand,
+        'resume': ResumeCommand,
+        'shutdown': ShutdownCommand,
+    },
+    entry_points={
+        'console_scripts': [
+            'campusconnect-deploy=setup:main',
+        ],
+    },
+)
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\.env.prod ---
+NODE_ENV=production
+PORT=5000
+MONGO_URI=mongodb://mongo.default.svc.cluster.local:27017/myapp_prod
+REDIS_HOST=redis
+APP_REDIS_PORT=6379
+REDIS_PASSWORD=yourRedisPassword
+SESSION_SECRET=someRandomLongSecret
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\.gitignore ---
+# compiled output
+/dist
+/node_modules
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\.prettierrc ---
+{
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\Dockerfile ---
+# Stage 1: Build the application
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# Stage 2: Production image
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 5000
+CMD ["node", "dist/main.js"]
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\eslint.config.mjs ---
+// @ts-check
+import eslint from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  {
+    ignores: ['eslint.config.mjs'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  eslintPluginPrettierRecommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
+      ecmaVersion: 5,
+      sourceType: 'module',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn'
+    },
+  },
+);
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\nest-cli.json ---
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\package.json ---
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.11",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.11",
+    "@nestjs/mongoose": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.11",
+    "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "connect-redis": "^6.1.3",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.11.0",
+    "redis": "^4.7.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@nestjs/testing": "^11.0.11",
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.10.7",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/jest": "^29.5.14",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.7",
+    "@types/redis": "^4.0.11",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^15.14.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.6",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\tsconfig.build.json ---
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\tsconfig.json ---
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "node"]
+    
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\app.module.ts ---
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module';
+import { RedisModule } from './redis/redis.module';
+import { AuthModule } from './auth/auth.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.development',
+    }),
+    DatabaseModule,
+    RedisModule,
+    AuthModule, // add additional feature modules here
+  ],
+})
+export class AppModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\main.ts ---
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import session from 'express-session';
+import { createClient } from 'redis';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+
+// connect-redis v6 for CommonJS
+const connectRedis = require('connect-redis');
+const RedisStore = connectRedis(session);
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
+
+  // Global pipes, filters, interceptors
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new LoggingInterceptor());
+
+  // Enable CORS
+  app.enableCors({
+    origin: configService.get<string>('CORS_ORIGIN') || '*',
+    credentials: true,
+  });
+
+  // Create Redis client for storing sessions
+  const redisClient = createClient({
+    socket: {
+      host: configService.get<string>('REDIS_HOST'),
+      port: parseInt(configService.get<string>('REDIS_PORT') || '6379', 10),
+    },
+    password: configService.get<string>('REDIS_PASSWORD'),
+  });
+  await redisClient.connect();
+
+  // Build the Redis-based session store
+  const redisStore = new RedisStore({
+    client: redisClient,
+    prefix: 'sess:',
+  });
+
+  // Retrieve SESSION_SECRET and log it
+  const sessionSecret = configService.get<string>('SESSION_SECRET');
+  if (!sessionSecret) {
+    logger.warn(
+      'No SESSION_SECRET found in environment. Using fallback secret. This is not secure for production!',
+    );
+  } else {
+    logger.log(`SESSION_SECRET is set to: ${sessionSecret}`);
+  }
+
+  // Apply session middleware
+  app.use(
+    session({
+      store: redisStore,
+      secret: sessionSecret || 'fallbackSecret',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: parseInt(
+          configService.get<string>('SESSION_LIFETIME') || '86400000',
+          10,
+        ),
+        httpOnly: true,
+        secure: configService.get<string>('COOKIE_SECURE') === 'true',
+        sameSite: configService.get<string>('COOKIE_SAME_SITE') || 'Lax',
+      },
+    }),
+  );
+
+  // Start the NestJS server
+  const port = configService.get<number>('PORT') || 5000;
+  await app.listen(port);
+  logger.log(`Backend is running on port ${port}`);
+}
+
+bootstrap();
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.controller.ts ---
+import { Controller, Post, Body, Get, Delete, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import { Request } from 'express';
+import { AuthService } from './auth.service';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('signup')
+  async signup(@Body() signupDto: SignupDto, @Req() req: Request) {
+    const user = await this.authService.signup(signupDto);
+    req.session.userId = String(user._id);
+
+    return { message: 'User created successfully', userId: user._id.toString() };
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+    const user = await this.authService.validateUser(loginDto);
+    req.session.userId = String(user._id);
+
+    return { message: 'Logged in successfully' };
+  }
+
+  @Get('profile')
+  async getProfile(@Req() req: Request) {
+    if (!req.session || !req.session.userId) {
+      return { message: 'Not logged in' };
+    }
+    return { message: 'Profile retrieved', userId: req.session.userId };
+  }
+
+  @Post('logout')
+  async logout(@Req() req: Request) {
+    return new Promise((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) return reject(err);
+        if (req.res) {
+          req.res.clearCookie('connect.sid');
+        }
+        resolve({ message: 'Logged out successfully' });
+      });
+    });
+  }
+
+  @Delete('delete')
+  async deleteUser(@Req() req: Request, @Body('password') password: string) {
+    if (!req.session || !req.session.userId) {
+      return { message: 'Not authenticated' };
+    }
+    req.session.destroy((err) => {
+      if (err) console.error('Session destruction error:', err);
+    });
+    return { message: 'User deleted successfully' };
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.module.ts ---
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { UserSchema } from './schemas/user.schema';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService],
+  exports: [AuthService],
+})
+export class AuthModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\auth.service.ts ---
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from './interfaces/user.interface';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+
+  async signup(signupDto: SignupDto): Promise<User> {
+    const { username, email, password } = signupDto;
+    const existingUser = await this.userModel.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      throw new ConflictException('User already exists');
+    }
+    const createdUser = new this.userModel({ username, email, password });
+    return createdUser.save();
+  }
+
+  async validateUser(loginDto: LoginDto): Promise<User> {
+    const { identifier, password } = loginDto;
+    const user = await this.userModel.findOne({
+      $or: [{ username: identifier }, { email: identifier }],
+    });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return user;
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\login.dto.ts ---
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class LoginDto {
+  @IsString()
+  @IsNotEmpty()
+  identifier: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\dto\signup.dto.ts ---
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+export class SignupDto {
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\interfaces\user.interface.ts ---
+import { Document, Types } from 'mongoose';
+
+export interface User extends Document {
+  readonly username: string;
+  readonly email: string;
+  password: string;
+  friends?: string[];
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  _id: Types.ObjectId;
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\auth\schemas\user.schema.ts ---
+import * as mongoose from 'mongoose';
+import * as bcrypt from 'bcrypt';
+
+export const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true, trim: true },
+  email:    { type: String, required: true, unique: true, trim: true },
+  password: { type: String, required: true },
+  friends:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+});
+
+// Pre-save hook to hash password
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+UserSchema.methods.comparePassword = function (candidatePassword: string): Promise<boolean> {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\filters\http-exception.filter.ts ---
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch()
+export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
+
+  catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const message =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : 'Internal server error';
+
+    this.logger.error(`HTTP Status: ${status} Error Message: ${JSON.stringify(message)}`, (exception as any).stack);
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message,
+    });
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\common\interceptors\logging.interceptor.ts ---
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
+import { Observable, tap } from 'rxjs';
+
+@Injectable()
+export class LoggingInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(LoggingInterceptor.name);
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const req = context.switchToHttp().getRequest();
+    const method = req.method;
+    const url = req.url;
+    const now = Date.now();
+
+    return next.handle().pipe(
+      tap(() => this.logger.log(`${method} ${url} - ${Date.now() - now}ms`)),
+    );
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\config\config.module.ts ---
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [
+    // Load .env file and validate required variables as needed
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.development',
+    }),
+  ],
+})
+export class AppConfigModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\database\database.module.ts ---
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+  exports: [MongooseModule],
+})
+export class DatabaseModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.module.ts ---
+import { Module, Global } from '@nestjs/common';
+import { RedisService } from './redis.service';
+
+@Global()
+@Module({
+  providers: [RedisService],
+  exports: [RedisService],
+})
+export class RedisModule {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\redis\redis.service.ts ---
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { createClient, RedisClientType } from 'redis';
+import { URL } from 'url';
+
+@Injectable()
+export class RedisService implements OnModuleInit, OnModuleDestroy {
+  private client: RedisClientType;
+  private readonly logger = new Logger(RedisService.name);
+
+  constructor(private configService: ConfigService) {}
+
+  async onModuleInit() {
+    const redisHost = this.configService.get<string>('REDIS_HOST');
+    let redisPortStr = this.configService.get<string>('REDIS_PORT') || "6379";
+    
+    // If REDIS_PORT is provided as a connection string, extract the port.
+    if (redisPortStr.startsWith('tcp://') || redisPortStr.startsWith('redis://')) {
+      try {
+        const parsed = new URL(redisPortStr.replace('tcp://', 'http://'));
+        redisPortStr = parsed.port;
+      } catch (err) {
+        this.logger.error(`Failed to parse REDIS_PORT URL: ${redisPortStr}`);
+        process.exit(1);
+      }
+    }
+    const redisPort = parseInt(redisPortStr, 10);
+    const redisPassword = this.configService.get<string>('REDIS_PASSWORD');
+
+    this.logger.log(`REDIS_HOST: ${redisHost}`);
+    this.logger.log(`REDIS_PORT: ${redisPortStr} parsed as ${redisPort}`);
+    this.logger.log(`REDIS_PASSWORD: ${redisPassword ? '****' : 'not set'}`);
+
+    if (isNaN(redisPort)) {
+      this.logger.error(`Invalid REDIS_PORT value: ${redisPortStr}`);
+      process.exit(1);
+    }
+    
+    this.client = createClient({
+      socket: {
+        host: redisHost,
+        port: redisPort,
+      },
+      password: redisPassword,
+    });
+    
+    this.client.on('error', (err) => {
+      this.logger.error('Redis Client Error: ' + err.message);
+    });
+    
+    await this.client.connect();
+    this.logger.log('Connected to Redis successfully');
+  }
+
+  getClient(): RedisClientType {
+    return this.client;
+  }
+
+  async onModuleDestroy() {
+    if (this.client) {
+      await this.client.disconnect();
+      this.logger.log('Redis client disconnected');
+    }
+  }
+}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\src\types\express-session.ts ---
+import "express-session";
+
+declare module "express-session" {
+  interface SessionData {
+    userId?: string;
+    // Add any other properties as needed
+  }
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      session: import("express-session").Session & Partial<import("express-session").SessionData>;
+    }
+  }
+}
+export {};
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\test\app.e2e-spec.ts ---
+/// <reference types="jest" />
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AuthModule } from './../src/auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { getConnectionToken } from '@nestjs/mongoose'; // << Important
+import { Connection } from 'mongoose';                // << Important
+import session from 'express-session';
+
+describe('AuthController (e2e)', () => {
+  let app: INestApplication;
+  let httpServer: any;
+
+  // We'll store cookies here so that subsequent tests can reuse the session
+  let cookieJar: string[] = [];
+
+  // This will reference the same Mongoose connection that NestJS creates
+  let connection: Connection;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        AuthModule,
+        // Connect to a dedicated test DB
+        MongooseModule.forRoot('mongodb://localhost:27017/campusconnect_test'),
+      ],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+
+    // Add session middleware for e2e tests
+    app.use(
+      session({
+        secret: 'testSecret', // for local testing only
+        resave: false,
+        saveUninitialized: false,
+      }),
+    );
+
+    await app.init();
+    httpServer = app.getHttpServer();
+
+    // Retrieve the NestJS-managed connection so we can drop the DB later
+    const connectionToken = getConnectionToken(); // typically 'DatabaseConnection'
+    connection = moduleFixture.get<Connection>(connectionToken);
+  });
+
+  afterAll(async () => {
+    // Drop the entire test database so it's fresh for next run
+    // ...only do this if you truly want to wipe out that DB each time
+    await connection.dropDatabase();  // <<-- Now on the instance, not the class
+    await connection.close();
+    await app.close();
+  });
+
+  /********************************************************************************
+   * SIGNUP
+   ********************************************************************************/
+  it('POST /auth/signup - creates a new user', async () => {
+    const response = await request(httpServer)
+      .post('/auth/signup')
+      .send({
+        username: 'testuser',
+        email: 'testuser@example.com',
+        password: 'password123',
+      })
+      .expect(201);
+
+    expect(response.body).toHaveProperty('userId');
+  });
+
+  /********************************************************************************
+   * LOGIN (WRONG PASSWORD) - should fail
+   ********************************************************************************/
+  it('POST /auth/login - fails on incorrect password', async () => {
+    const response = await request(httpServer)
+      .post('/auth/login')
+      .send({ identifier: 'testuser', password: 'incorrectPassword' })
+      .expect(401);
+
+    expect(response.body.message).toBe('Invalid credentials');
+  });
+
+  /********************************************************************************
+   * LOGIN (CORRECT PASSWORD)
+   ********************************************************************************/
+  it('POST /auth/login - logs in successfully with correct password', async () => {
+    // Log out if there's any previous session
+    await request(httpServer).post('/auth/logout');
+
+    const response = await request(httpServer)
+      .post('/auth/login')
+      .send({ identifier: 'testuser', password: 'password123' })
+      .expect(200);
+
+    expect(response.body.message).toBe('Logged in successfully');
+
+    // Safely store the set-cookie header as an array of strings
+    const setCookie = response.headers['set-cookie'];
+    if (typeof setCookie === 'string') {
+      cookieJar = [setCookie];
+    } else {
+      cookieJar = setCookie ?? [];
+    }
+  });
+
+  /********************************************************************************
+   * PROFILE (LOGGED IN)
+   ********************************************************************************/
+  it('GET /auth/profile - returns user info when logged in', async () => {
+    const response = await request(httpServer)
+      .get('/auth/profile')
+      .set('Cookie', cookieJar)
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      message: 'Profile retrieved',
+      userId: expect.any(String),
+    });
+  });
+
+  /********************************************************************************
+   * LOGOUT
+   ********************************************************************************/
+  it('POST /auth/logout - logs out the user', async () => {
+    const response = await request(httpServer)
+      .post('/auth/logout')
+      .set('Cookie', cookieJar)
+      .expect(200);
+
+    expect(response.body.message).toBe('Logged out successfully');
+
+    // clear our local copy of the cookie
+    cookieJar = [];
+  });
+
+  /********************************************************************************
+   * PROFILE (LOGGED OUT)
+   ********************************************************************************/
+  it('GET /auth/profile - returns "Not logged in" after logout', async () => {
+    // We have no valid cookie now
+    const response = await request(httpServer)
+      .get('/auth/profile')
+      .expect(200);
+
+    expect(response.body.message).toBe('Not logged in');
+  });
+
+  /********************************************************************************
+   * LOGIN AGAIN FOR DELETE
+   ********************************************************************************/
+  it('POST /auth/login - logs in user again for deletion test', async () => {
+    const response = await request(httpServer)
+      .post('/auth/login')
+      .send({ identifier: 'testuser', password: 'password123' })
+      .expect(200);
+
+    expect(response.body.message).toBe('Logged in successfully');
+
+    const setCookie = response.headers['set-cookie'];
+    if (typeof setCookie === 'string') {
+      cookieJar = [setCookie];
+    } else {
+      cookieJar = setCookie ?? [];
+    }
+  });
+
+  /********************************************************************************
+   * DELETE USER
+   ********************************************************************************/
+  it('DELETE /auth/delete - deletes user successfully when logged in', async () => {
+    const response = await request(httpServer)
+      .delete('/auth/delete')
+      .set('Cookie', cookieJar)
+      .send({ password: 'password123' })
+      .expect(200);
+
+    expect(response.body.message).toBe('User deleted successfully');
+  });
+
+  /********************************************************************************
+   * PROFILE AFTER DELETION
+   ********************************************************************************/
+  it('GET /auth/profile - not logged in after user is deleted', async () => {
+    // even if we pass old cookie, user is presumably gone
+    const response = await request(httpServer)
+      .get('/auth/profile')
+      .set('Cookie', cookieJar)
+      .expect(200);
+
+    expect(response.body.message).toBe('Not logged in');
+  });
+});
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\backend\test\jest-e2e.json ---
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "coverageDirectory": "./coverage-e2e",
+  "testEnvironment": "node"
+}
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-deployment.yaml ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-backend
+  template:
+    metadata:
+      labels:
+        app: myapp-backend
+    spec:
+      containers:
+        - name: backend
+          image: myapp-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp-config
+                  key: mongo_uri
+            - name: REDIS_HOST
+              value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "yourRedisPassword"
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\backend-service.yaml ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-backend
+spec:
+  selector:
+    app: myapp-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\configmap.yaml ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+data:
+  mongo_uri: "mongodb://mongo:27017/myapp_prod"
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\mongo-deployment.yaml ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:8.0
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+          - name: mongo-data
+            mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          emptyDir: {}
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\mongo-service.yaml ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: ClusterIP
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-deployment.yaml ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-nginx
+  template:
+    metadata:
+      labels:
+        app: myapp-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: myapp-nginx:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\nginx-service.yaml ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-nginx
+spec:
+  selector:
+    app: myapp-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080  # Fixed NodePort for external access
+  type: NodePort
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-deployment.yaml ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        ports:
+        - containerPort: 6379
+        args: ["redis-server", "--requirepass", "yourRedisPassword"]
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\deploy\k8s\redis-service.yaml ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\nginx\Dockerfile ---
+FROM nginx:alpine
+
+# Remove the default configuration file
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy your custom configuration (ensure the file name matches exactly)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+# Clear the default entrypoint inherited from the base image
+ENTRYPOINT []
+
+# Use the nginx binary from PATH to run Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+
+--- C:\Users\Tyler\workspace\CampusConnect1\nginx\nginx.conf ---
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location / {
+        proxy_pass http://myapp-backend:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+
